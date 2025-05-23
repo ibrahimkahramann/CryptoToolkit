@@ -1,0 +1,99 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Şifrele";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0"><i class="bi bi-lock-fill me-2"></i>Şifreleme</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Encrypt" method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="method" class="form-label fw-bold">Şifreleme Yöntemi</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                                    <select class="form-select" id="method" name="method">
+                                        <option value="AES">AES (Advanced Encryption Standard)</option>
+                                        <option value="RSA">RSA (Rivest-Shamir-Adleman)</option>
+                                    </select>
+                                </div>
+                                <small class="text-muted">AES 256-bit CBC modu veya RSA 2048-bit</small>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="plainText" class="form-label fw-bold">Şifrelenecek Metin</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-file-text"></i></span>
+                                <textarea class="form-control" id="plainText" name="plainText" rows="5" placeholder="Şifrelemek istediğiniz metni buraya girin..."></textarea>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-lock-fill me-2"></i>Şifrele</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model != null && Model.CipherText != null)
+{
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="mb-0"><i class="bi bi-shield-check me-2"></i>Şifreleme Başarılı</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Şifreli Metin:</label>
+                            <div class="bg-light p-3 rounded">
+                                <code class="text-break">@Model.CipherText</code>
+                            </div>
+                        </div>
+
+                        @if (Model is CryptoToolkit.Web.Models.AesModel)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Anahtar (AES):</label>
+                                <div class="bg-light p-3 rounded">
+                                    <code class="text-break">@Model.Key</code>
+                                </div>
+                                <small class="text-danger">Bu anahtarı güvenli bir yerde saklayın!</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">IV (AES):</label>
+                                <div class="bg-light p-3 rounded">
+                                    <code class="text-break">@Model.IV</code>
+                                </div>
+                                <small class="text-danger">Bu IV'yi güvenli bir yerde saklayın!</small>
+                            </div>
+                        }
+                        else if (Model is CryptoToolkit.Web.Models.RsaModel)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Açık Anahtar (RSA):</label>
+                                <div class="bg-light p-3 rounded">
+                                    <code class="text-break">@Model.PublicKey</code>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Özel Anahtar (RSA):</label>
+                                <div class="bg-light p-3 rounded">
+                                    <code class="text-break">@Model.PrivateKey</code>
+                                </div>
+                                <small class="text-danger">Bu özel anahtarı asla başkalarıyla paylaşmayın!</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,63 @@
+@model dynamic
+@{
+    ViewData["Title"] = "SHA256 Özeti";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning">
+                    <h2 class="mb-0"><i class="bi bi-hash me-2"></i>SHA256 Özeti</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Hash" method="post" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label for="inputText" class="form-label fw-bold">Metin Özeti</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-fonts"></i></span>
+                                <textarea class="form-control" id="inputText" name="inputText" rows="4" placeholder="SHA256 özeti çıkarılacak metni buraya girin..."></textarea>
+                            </div>
+                            <small class="text-muted">Bir metin girin veya aşağıdan dosya yükleyin</small>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="uploadedFile" class="form-label fw-bold">Dosya Özeti</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-file-earmark"></i></span>
+                                <input type="file" class="form-control" id="uploadedFile" name="uploadedFile" />
+                            </div>
+                            <small class="text-muted">Bir dosya seçin ve SHA256 özetini hesaplayın</small>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-warning"><i class="bi bi-hash me-2"></i>Özetle</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model != null && Model.GetType().GetProperty("HashResult") != null)
+{
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="mb-0"><i class="bi bi-check-circle-fill me-2"></i>SHA256 Özeti Oluşturuldu</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">SHA256 Sonucu:</label>
+                            <div class="bg-light p-3 rounded">
+                                <code class="text-break" style="word-wrap: break-word;">@Model.HashResult</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

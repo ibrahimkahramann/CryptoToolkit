@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "CryptoToolkit - Ana Sayfa";
+}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">CryptoToolkit'e Hoş Geldiniz</h1>
+            <p class="lead mb-4">
+                Bu uygulama ile metin veya dosyalarınızı kolayca şifreleyebilir, çözebilir ve SHA256 özetini alabilirsiniz.<br/>
+                <strong>Desteklenen işlemler:</strong>
+            </p>
+            <ul class="list-group mb-4">
+                <li class="list-group-item">AES ile metin şifreleme/çözme (CBC Modu)</li>
+                <li class="list-group-item">RSA ile metin şifreleme/çözme (2048-bit)</li>
+                <li class="list-group-item">SHA256 ile metin veya dosya özeti alma</li>
+            </ul>
+            <div class="d-grid gap-2 d-md-block">
+                <a class="btn btn-primary btn-lg me-2" asp-controller="Crypto" asp-action="Encrypt">Şifrele</a>
+                <a class="btn btn-success btn-lg me-2" asp-controller="Crypto" asp-action="Decrypt">Çöz</a>
+                <a class="btn btn-warning btn-lg" asp-controller="Crypto" asp-action="Hash">SHA256</a>
+            </div>
+        </div>
+    </div>
+</div>

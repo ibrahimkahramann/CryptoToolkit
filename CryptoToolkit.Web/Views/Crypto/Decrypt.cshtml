@@ -1,0 +1,102 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Çöz";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-success text-white">
+                    <h2 class="mb-0"><i class="bi bi-unlock-fill me-2"></i>Şifre Çözme</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Decrypt" method="post">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="method" class="form-label fw-bold">Şifreleme Yöntemi</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                                    <select class="form-select" id="method" name="method">
+                                        <option value="AES">AES (Advanced Encryption Standard)</option>
+                                        <option value="RSA">RSA (Rivest-Shamir-Adleman)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="cipherText" class="form-label fw-bold">Şifreli Metin</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-file-earmark-lock"></i></span>
+                                <textarea class="form-control" id="cipherText" name="cipherText" rows="3" placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..."></textarea>
+                            </div>
+                        </div>
+
+                        <div id="aesFields">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="key" class="form-label fw-bold">Anahtar (AES için)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                        <input type="text" class="form-control" id="key" name="key" placeholder="AES anahtarını girin" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="iv" class="form-label fw-bold">IV (AES için)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-vector-pen"></i></span>
+                                        <input type="text" class="form-control" id="iv" name="iv" placeholder="Başlatma vektörünü girin" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4" id="rsaFields">
+                            <label for="privateKey" class="form-label fw-bold">Özel Anahtar (RSA için)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <textarea class="form-control" id="privateKey" name="privateKey" rows="3" placeholder="RSA özel anahtarını buraya yapıştırın..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-success"><i class="bi bi-unlock-fill me-2"></i>Çöz</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model != null && Model.PlainText != null)
+{
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="mb-0"><i class="bi bi-unlock-check me-2"></i>Şifre Çözme Başarılı</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Çözülen Metin:</label>
+                            <div class="bg-light p-3 rounded">
+                                <code class="text-break">@Model.PlainText</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function toggleFields() {
+        var method = document.getElementById('method').value;
+        document.getElementById('aesFields').style.display = method === 'AES' ? 'block' : 'none';
+        document.getElementById('rsaFields').style.display = method === 'RSA' ? 'block' : 'none';
+    }
+    document.getElementById('method').addEventListener('change', toggleFields);
+    window.onload = toggleFields;
+</script>
