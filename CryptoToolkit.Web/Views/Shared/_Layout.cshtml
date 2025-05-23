@@ -4,68 +4,120 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CryptoToolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CryptoToolkit.Web.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CryptoToolkit.Web</a>
+        <nav class="navbar navbar-expand-sm navbar-dark">
+            <div class="container">
+                <a class="navbar-brand animate__animated animate__fadeIn" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-shield-lock me-2"></i>CryptoToolkit
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-house-fill me-1"></i> Anasayfa
+                </button>                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">                <ul class="navbar-nav flex-grow-1">                    <li class="nav-item animate__animated animate__fadeIn" style="--animate-delay: 0.1s">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Encrypt" ? "active" : "")" 
+                           asp-controller="Crypto" asp-action="Encrypt">
+                            <i class="bi bi-lock-fill me-2"></i> Şifrele
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Crypto" asp-action="Encrypt">
-                            <i class="bi bi-lock-fill me-1"></i> Şifrele
+                    </li>                    <li class="nav-item animate__animated animate__fadeIn" style="--animate-delay: 0.2s">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Decrypt" ? "active" : "")" 
+                           asp-controller="Crypto" asp-action="Decrypt">
+                            <i class="bi bi-unlock-fill me-2"></i> Çöz
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Crypto" asp-action="Decrypt">
-                            <i class="bi bi-unlock-fill me-1"></i> Çöz
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Crypto" asp-action="Hash">
-                            <i class="bi bi-hash me-1"></i> SHA256
+                    </li>                    <li class="nav-item animate__animated animate__fadeIn" style="--animate-delay: 0.3s">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Hash" ? "active" : "")" 
+                           asp-controller="Crypto" asp-action="Hash">
+                            <i class="bi bi-hash me-2"></i> SHA256
                         </a>
                     </li>
                 </ul>
                 </div>
             </div>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    </header>    <div class="container-fluid px-0">
+        <main role="main">
             @RenderBody()
         </main>
-    </div>    <footer class="border-top footer text-muted py-4">
+    </div>
+    
+    <footer class="footer text-white py-4 mt-5">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p>&copy; 2025 - CryptoToolkit - <a asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik</a></p>
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <h5><i class="bi bi-shield-lock me-2"></i>CryptoToolkit</h5>
+                    <p class="small mb-0">Güvenli şifreleme ve özetleme araçları</p>
                 </div>
-                <div class="col-md-6 text-end">
-                    <p>
-                        <i class="bi bi-shield-lock me-2"></i>Güvenli şifreleme ve özetleme araçları
-                    </p>
+                <div class="col-md-4 text-center">
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="#" class="text-white"><i class="bi bi-github fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-linkedin fs-4"></i></a>
+                        <a href="#" class="text-white"><i class="bi bi-twitter-x fs-4"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <p class="small mb-0">&copy; 2025 - CryptoToolkit</p>
+                    <p class="small"><a asp-area="" asp-controller="Home" asp-action="Privacy">Gizlilik Politikası</a></p>
                 </div>
             </div>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    </footer>    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Add this function to enable loading animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize any plugins or effects you want
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+            
+            // Handle form submission loading state
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> İşleniyor...';
+                        submitBtn.disabled = true;
+                    }
+                });
+            });
+        });
+
+        // Toggle fields visibility for decrypt page
+        if (document.getElementById('method')) {
+            function toggleFields() {
+                var method = document.getElementById('method').value;
+                var aesFields = document.getElementById('aesFields');
+                var rsaFields = document.getElementById('rsaFields');
+                
+                if (aesFields && rsaFields) {
+                    aesFields.style.display = method === 'AES' ? 'block' : 'none';
+                    rsaFields.style.display = method === 'RSA' ? 'block' : 'none';
+                }
+            }
+              document.getElementById('method').addEventListener('change', toggleFields);
+            window.addEventListener('load', toggleFields);
+        }
+    </script>
+    
+    <!-- Toast container for notifications -->
+    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;"></div>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

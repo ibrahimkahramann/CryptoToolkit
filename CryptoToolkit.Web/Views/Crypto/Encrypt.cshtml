@@ -1,99 +1,224 @@
 @model dynamic
 @{
-    ViewData["Title"] = "Şifrele";
+    ViewData["Title"] = "Metin Şifreleme";
 }
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white">
-                    <h2 class="mb-0"><i class="bi bi-lock-fill me-2"></i>Şifreleme</h2>
-                </div>
-                <div class="card-body">
-                    <form asp-action="Encrypt" method="post">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="method" class="form-label fw-bold">Şifreleme Yöntemi</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
-                                    <select class="form-select" id="method" name="method">
-                                        <option value="AES">AES (Advanced Encryption Standard)</option>
-                                        <option value="RSA">RSA (Rivest-Shamir-Adleman)</option>
-                                    </select>
+<section class="position-relative py-5">
+    <!-- Animated Background for Encrypt Page -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index:-1; overflow:hidden;">
+        <div style="position:absolute; top:-50%; right:-50%; width:100%; height:100%; background:linear-gradient(135deg, rgba(78, 84, 200, 0.1), rgba(143, 148, 251, 0.05)); border-radius:50%;"></div>
+    </div>
+
+    <div class="container py-3">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold mb-2 animate__animated animate__fadeIn">Metin Şifreleme</h1>
+                <p class="text-muted animate__animated animate__fadeIn animate__delay-1s">AES veya RSA ile verilerinizi güvenle şifreleyin</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="card-header p-4" style="background:var(--gradient-primary);">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon encrypt-icon me-3" style="width:50px;height:50px;min-width:50px;background:rgba(255,255,255,0.2);">
+                                <i class="bi bi-lock-fill text-white"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-white mb-0 fw-bold">Şifreleme</h2>
+                                <p class="text-white-50 mb-0">Metninizi şifreleyerek koruyun</p>
+                            </div>
+                        </div>
+                    </div>                    <div class="card-body p-4">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <form asp-action="Encrypt" method="post" class="needs-validation" novalidate>
+                            <!-- Şifreleme Yöntemi -->
+                            <div class="mb-4">
+                                <label for="method" class="form-label">Şifreleme Algoritması</label>
+                                <div class="encryption-method-selector mb-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <input type="radio" class="btn-check" name="method" id="aesMethod" value="AES" checked>
+                                            <label class="btn btn-outline-primary w-100 py-3" for="aesMethod">
+                                                <i class="bi bi-lock-fill me-2"></i> AES-256
+                                                <div class="small text-muted">Simetrik Şifreleme (CBC)</div>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="radio" class="btn-check" name="method" id="rsaMethod" value="RSA">
+                                            <label class="btn btn-outline-primary w-100 py-3" for="rsaMethod">
+                                                <i class="bi bi-key-fill me-2"></i> RSA-2048
+                                                <div class="small text-muted">Asimetrik Şifreleme</div>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                                <small class="text-muted">AES 256-bit CBC modu veya RSA 2048-bit</small>
                             </div>
-                        </div>
-                        <div class="mb-4">
-                            <label for="plainText" class="form-label fw-bold">Şifrelenecek Metin</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-file-text"></i></span>
-                                <textarea class="form-control" id="plainText" name="plainText" rows="5" placeholder="Şifrelemek istediğiniz metni buraya girin..."></textarea>
+
+                            <!-- Şifrelenecek Metin -->
+                            <div class="mb-4">
+                                <label for="plainText" class="form-label">Şifrelenecek Metin</label>
+                                <div class="input-group input-group-lg mb-2">
+                                    <span class="input-group-text bg-light"><i class="bi bi-file-text text-primary"></i></span>
+                                    <textarea class="form-control form-control-lg" id="plainText" name="plainText" rows="5" placeholder="Şifrelemek istediğiniz metni buraya girin..." required></textarea>
+                                </div>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle me-1"></i> 
+                                    Girdiğiniz metin seçili algoritma ile şifrelenecek
+                                </div>
+                            </div>                            <div class="d-flex justify-content-end align-items-center mt-4">
+                                <button type="submit" class="btn btn-primary px-5 py-2">
+                                    <i class="bi bi-lock-fill me-2"></i>Şifrele
+                                </button>
                             </div>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-primary"><i class="bi bi-lock-fill me-2"></i>Şifrele</button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@if (Model != null && Model.CipherText != null)
+</section>
+@if (Model != null && Model?.CipherText != null)
 {
-    <div class="container mt-4">
+    <div class="container mt-5 animate__animated animate__fadeInUp">
         <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-success text-white">
-                        <h3 class="mb-0"><i class="bi bi-shield-check me-2"></i>Şifreleme Başarılı</h3>
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-header p-4 text-white" style="background:linear-gradient(135deg, #4CAF50, #8BC34A)">
+                        <div class="d-flex align-items-center">
+                            <div class="p-2 rounded-circle bg-white me-3">
+                                <i class="bi bi-check-circle-fill text-success fs-3"></i>
+                            </div>
+                            <div>
+                                <h3 class="mb-0 fw-bold">Şifreleme Başarılı</h3>
+                                <p class="mb-0 text-white-50">Verileriniz güvenle şifrelendi</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Şifreli Metin:</label>
-                            <div class="bg-light p-3 rounded">
-                                <code class="text-break">@Model.CipherText</code>
+                    
+                    <div class="card-body p-4">
+                        <div class="alert alert-info mb-4">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <strong>Önemli:</strong> Şifreli metin ve anahtarları güvenli bir şekilde saklayın. Anahtarlar olmadan verilerinizi geri döndüremezsiniz.
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-lock-fill fs-4 me-2 text-primary"></i>
+                                <h5 class="mb-0">Şifreli Metin</h5>
+                            </div>                            <div class="result-block">                                <code class="text-break">@Model?.CipherText</code>
+                                <button class="btn btn-sm btn-outline-primary copy-btn position-absolute top-0 end-0 m-2" 
+                                    onclick="copyToClipboard(this, '@Model?.CipherText?.Replace("'", "\\'")' || '')">
+                                    <i class="bi bi-clipboard me-1"></i> Kopyala
+                                </button>
                             </div>
                         </div>
 
                         @if (Model is CryptoToolkit.Web.Models.AesModel)
                         {
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Anahtar (AES):</label>
-                                <div class="bg-light p-3 rounded">
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-key-fill fs-4 me-2 text-warning"></i>
+                                    <h5 class="mb-0">Anahtar (AES)</h5>
+                                </div>                                <div class="result-block">
                                     <code class="text-break">@Model.Key</code>
+                                    <button class="btn btn-sm btn-outline-warning copy-btn position-absolute top-0 end-0 m-2" 
+                                        onclick="copyToClipboard(this, '@Model.Key?.Replace("'", "\\'")' || '')">
+                                        <i class="bi bi-clipboard me-1"></i> Kopyala
+                                    </button>
                                 </div>
-                                <small class="text-danger">Bu anahtarı güvenli bir yerde saklayın!</small>
+                                <div class="d-flex mt-2">
+                                    <div class="badge text-bg-danger py-2">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Bu anahtarı güvenli bir yerde saklayın!
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">IV (AES):</label>
-                                <div class="bg-light p-3 rounded">
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-vector-pen fs-4 me-2 text-info"></i>
+                                    <h5 class="mb-0">IV (AES)</h5>
+                                </div>                                <div class="result-block">
                                     <code class="text-break">@Model.IV</code>
+                                    <button class="btn btn-sm btn-outline-info copy-btn position-absolute top-0 end-0 m-2" 
+                                        onclick="copyToClipboard(this, '@Model.IV?.Replace("'", "\\'")' || '')">
+                                        <i class="bi bi-clipboard me-1"></i> Kopyala
+                                    </button>
                                 </div>
-                                <small class="text-danger">Bu IV'yi güvenli bir yerde saklayın!</small>
+                                <div class="d-flex mt-2">
+                                    <div class="badge text-bg-danger py-2">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Bu IV'yi güvenli bir yerde saklayın!
+                                    </div>
+                                </div>
                             </div>
                         }
                         else if (Model is CryptoToolkit.Web.Models.RsaModel)
                         {
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Açık Anahtar (RSA):</label>
-                                <div class="bg-light p-3 rounded">
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-key fs-4 me-2 text-success"></i>
+                                    <h5 class="mb-0">Açık Anahtar (RSA)</h5>
+                                </div>                                <div class="result-block">
                                     <code class="text-break">@Model.PublicKey</code>
+                                    <button class="btn btn-sm btn-outline-success copy-btn position-absolute top-0 end-0 m-2" 
+                                        onclick="copyToClipboard(this, '@Model.PublicKey?.Replace("'", "\\'")' || '')">
+                                        <i class="bi bi-clipboard me-1"></i> Kopyala
+                                    </button>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">Özel Anahtar (RSA):</label>
-                                <div class="bg-light p-3 rounded">
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-shield-lock fs-4 me-2 text-danger"></i>
+                                    <h5 class="mb-0">Özel Anahtar (RSA)</h5>
+                                </div>                                <div class="result-block">
                                     <code class="text-break">@Model.PrivateKey</code>
+                                    <button class="btn btn-sm btn-outline-danger copy-btn position-absolute top-0 end-0 m-2" 
+                                        onclick="copyToClipboard(this, '@Model.PrivateKey?.Replace("'", "\\'")' || '')">
+                                        <i class="bi bi-clipboard me-1"></i> Kopyala
+                                    </button>
                                 </div>
-                                <small class="text-danger">Bu özel anahtarı asla başkalarıyla paylaşmayın!</small>
+                                <div class="d-flex mt-2">
+                                    <div class="badge text-bg-danger py-2">
+                                        <i class="bi bi-exclamation-triangle-fill me-1"></i> Bu özel anahtarı asla başkalarıyla paylaşmayın!
+                                    </div>
+                                </div>
                             </div>
                         }
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-house-fill me-2"></i>Ana Sayfaya Dön
+                            </a>
+                            <a asp-controller="Crypto" asp-action="Decrypt" class="btn btn-success">
+                                <i class="bi bi-unlock-fill me-2"></i>Şifre Çözme Sayfasına Git
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function copyToClipboard(btn, text) {
+            navigator.clipboard.writeText(text).then(function() {
+                btn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Kopyalandı';
+                setTimeout(function() {
+                    btn.innerHTML = '<i class="bi bi-clipboard me-1"></i> Kopyala';
+                }, 2000);
+            });
+        }
+    </script>
 }

@@ -2,6 +2,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<CryptoToolkit.Web.Services.AesService>();
+builder.Services.AddScoped<CryptoToolkit.Web.Services.RsaService>();
+builder.Services.AddScoped<CryptoToolkit.Web.Services.Sha256Service>();
 
 var app = builder.Build();
 

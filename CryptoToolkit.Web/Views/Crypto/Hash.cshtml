@@ -3,43 +3,111 @@
     ViewData["Title"] = "SHA256 Özeti";
 }
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-warning">
-                    <h2 class="mb-0"><i class="bi bi-hash me-2"></i>SHA256 Özeti</h2>
-                </div>
-                <div class="card-body">
-                    <form asp-action="Hash" method="post" enctype="multipart/form-data">
-                        <div class="mb-4">
-                            <label for="inputText" class="form-label fw-bold">Metin Özeti</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-fonts"></i></span>
-                                <textarea class="form-control" id="inputText" name="inputText" rows="4" placeholder="SHA256 özeti çıkarılacak metni buraya girin..."></textarea>
+<section class="position-relative py-5">
+    <!-- Animated Background for Hash Page -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index:-1; overflow:hidden;">
+        <div style="position:absolute; top:-50%; left:-50%; width:100%; height:100%; background:linear-gradient(135deg, rgba(255, 190, 11, 0.1), rgba(255, 209, 102, 0.05)); border-radius:50%;"></div>
+    </div>
+
+    <div class="container py-3">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold mb-2 animate__animated animate__fadeIn">SHA256 Özeti</h1>
+                <p class="text-muted animate__animated animate__fadeIn animate__delay-1s">Metin veya dosyalar için güvenilir özet oluşturun</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="card-header p-4" style="background:var(--gradient-warning);">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon hash-icon me-3" style="width:50px;height:50px;min-width:50px;background:rgba(255,255,255,0.2);">
+                                <i class="bi bi-hash text-white"></i>
                             </div>
-                            <small class="text-muted">Bir metin girin veya aşağıdan dosya yükleyin</small>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="uploadedFile" class="form-label fw-bold">Dosya Özeti</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-file-earmark"></i></span>
-                                <input type="file" class="form-control" id="uploadedFile" name="uploadedFile" />
+                            <div>
+                                <h2 class="text-dark mb-0 fw-bold">SHA256 Özeti</h2>
+                                <p class="text-dark-50 mb-0">Veri bütünlüğünü doğrulayın</p>
                             </div>
-                            <small class="text-muted">Bir dosya seçin ve SHA256 özetini hesaplayın</small>
                         </div>
-                        
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-warning"><i class="bi bi-hash me-2"></i>Özetle</button>
-                        </div>
-                    </form>
+                    </div>                    <div class="card-body p-4">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <form asp-action="Hash" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            <!-- Görsel bir seçenek seçimi -->
+                            <div class="mb-4">
+                                <ul class="nav nav-pills nav-fill mb-3" id="hashTypeTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="text-tab" data-bs-toggle="tab" data-bs-target="#text-content" type="button" role="tab">
+                                            <i class="bi bi-fonts me-2"></i>Metin
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="file-tab" data-bs-toggle="tab" data-bs-target="#file-content" type="button" role="tab">
+                                            <i class="bi bi-file-earmark me-2"></i>Dosya
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-content p-0" id="hashTypeContent">
+                                <!-- Metin Özeti -->
+                                <div class="tab-pane fade show active" id="text-content" role="tabpanel">
+                                    <div class="mb-4">
+                                        <label for="inputText" class="form-label">Metin</label>
+                                        <div class="input-group input-group-lg mb-2">
+                                            <span class="input-group-text bg-light"><i class="bi bi-fonts text-warning"></i></span>
+                                            <textarea class="form-control form-control-lg" id="inputText" name="inputText" rows="5" 
+                                                placeholder="SHA256 özeti hesaplanacak metni buraya girin..."></textarea>
+                                        </div>
+                                        <div class="form-text">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Metin girişi yaparken özel karakterler ve boşluklar da hesaba katılır
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dosya Özeti -->
+                                <div class="tab-pane fade" id="file-content" role="tabpanel">
+                                    <div class="mb-4">
+                                        <label for="uploadedFile" class="form-label">Dosya Seçin</label>
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text bg-light"><i class="bi bi-file-earmark text-warning"></i></span>
+                                            <input type="file" class="form-control form-control-lg" id="uploadedFile" name="uploadedFile" />
+                                        </div>
+                                        <div class="form-text">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Dosyanın tüm içeriği için SHA256 özeti hesaplanacak
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <a asp-controller="Crypto" asp-action="Encrypt" class="btn btn-outline-secondary px-4">
+                                    <i class="bi bi-arrow-left me-2"></i> Şifreleme
+                                </a>
+                                <button type="submit" class="btn btn-warning px-5 py-2">
+                                    <i class="bi bi-hash me-2"></i>Özet Oluştur
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@if (Model != null && Model.GetType().GetProperty("HashResult") != null)
+</section>
+@if (Model != null && Model?.GetType()?.GetProperty("HashResult") != null)
 {
     <div class="container mt-4">
         <div class="row justify-content-center">
@@ -50,9 +118,12 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">SHA256 Sonucu:</label>
-                            <div class="bg-light p-3 rounded">
-                                <code class="text-break" style="word-wrap: break-word;">@Model.HashResult</code>
+                            <label class="form-label fw-bold">SHA256 Sonucu:</label>                            <div class="bg-light p-3 rounded position-relative">
+                                <code class="text-break" style="word-wrap: break-word;">@Model?.HashResult</code>
+                                <button class="btn btn-sm btn-outline-success copy-btn position-absolute top-0 end-0 m-2" 
+                                    onclick="copyToClipboard(this, '@Model?.HashResult?.Replace("'", "\\'")' || '')">
+                                    <i class="bi bi-clipboard me-1"></i> Kopyala
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -1,75 +1,143 @@
 @model dynamic
 @{
-    ViewData["Title"] = "Çöz";
+    ViewData["Title"] = "Şifre Çözme";
 }
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-success text-white">
-                    <h2 class="mb-0"><i class="bi bi-unlock-fill me-2"></i>Şifre Çözme</h2>
-                </div>
-                <div class="card-body">
-                    <form asp-action="Decrypt" method="post">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="method" class="form-label fw-bold">Şifreleme Yöntemi</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
-                                    <select class="form-select" id="method" name="method">
-                                        <option value="AES">AES (Advanced Encryption Standard)</option>
-                                        <option value="RSA">RSA (Rivest-Shamir-Adleman)</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <label for="cipherText" class="form-label fw-bold">Şifreli Metin</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-file-earmark-lock"></i></span>
-                                <textarea class="form-control" id="cipherText" name="cipherText" rows="3" placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..."></textarea>
-                            </div>
-                        </div>
+<section class="position-relative py-5">
+    <!-- Animated Background for Decrypt Page -->
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index:-1; overflow:hidden;">
+        <div style="position:absolute; top:-50%; left:-50%; width:100%; height:100%; background:linear-gradient(135deg, rgba(72, 209, 204, 0.1), rgba(114, 239, 221, 0.05)); border-radius:50%;"></div>
+    </div>
 
-                        <div id="aesFields">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="key" class="form-label fw-bold">Anahtar (AES için)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
-                                        <input type="text" class="form-control" id="key" name="key" placeholder="AES anahtarını girin" />
+    <div class="container py-3">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold mb-2 animate__animated animate__fadeIn">Şifre Çözme</h1>
+                <p class="text-muted animate__animated animate__fadeIn animate__delay-1s">Şifrelenmiş verilerinizi doğru anahtarlarla çözün</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeIn animate__delay-1s">
+                    <div class="card-header p-4" style="background:var(--gradient-success);">
+                        <div class="d-flex align-items-center">
+                            <div class="feature-icon decrypt-icon me-3" style="width:50px;height:50px;min-width:50px;background:rgba(255,255,255,0.2);">
+                                <i class="bi bi-unlock-fill text-white"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-white mb-0 fw-bold">Şifre Çözme</h2>
+                                <p class="text-white-50 mb-0">Şifreli metinleri çözün</p>
+                            </div>
+                        </div>
+                    </div>                    <div class="card-body p-4">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                    {
+                                        <li>@error.ErrorMessage</li>
+                                    }
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <form asp-action="Decrypt" method="post" class="needs-validation" novalidate>
+                            <!-- Şifreleme Yöntemi -->
+                            <div class="mb-4">
+                                <label for="method" class="form-label">Şifreleme Algoritması</label>
+                                <div class="encryption-method-selector mb-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <input type="radio" class="btn-check" name="method" id="aesMethod" value="AES" checked>
+                                            <label class="btn btn-outline-success w-100 py-3" for="aesMethod">
+                                                <i class="bi bi-lock-fill me-2"></i> AES-256
+                                                <div class="small text-muted">Simetrik Şifreleme (CBC)</div>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="radio" class="btn-check" name="method" id="rsaMethod" value="RSA">
+                                            <label class="btn btn-outline-success w-100 py-3" for="rsaMethod">
+                                                <i class="bi bi-key-fill me-2"></i> RSA-2048
+                                                <div class="small text-muted">Asimetrik Şifreleme</div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="iv" class="form-label fw-bold">IV (AES için)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="bi bi-vector-pen"></i></span>
-                                        <input type="text" class="form-control" id="iv" name="iv" placeholder="Başlatma vektörünü girin" />
+                            </div>
+
+                            <!-- Şifreli Metin -->
+                            <div class="mb-4">
+                                <label for="cipherText" class="form-label">Şifreli Metin</label>
+                                <div class="input-group input-group-lg mb-2">
+                                    <span class="input-group-text bg-light"><i class="bi bi-file-lock2 text-success"></i></span>
+                                    <textarea class="form-control form-control-lg" id="cipherText" name="cipherText" rows="4" 
+                                        placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..." required></textarea>
+                                </div>
+                            </div>
+
+                            <!-- AES için alanlar -->
+                            <div id="aesFields" class="mb-4 animate__animated animate__fadeIn">
+                                <div class="card border border-success-subtle rounded-4 bg-success-subtle p-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-shield-lock me-2"></i>AES Anahtarları</h5>
+                                        <div class="row g-3 mt-2">
+                                            <div class="col-md-6">
+                                                <label for="key" class="form-label">AES Anahtarı</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-white"><i class="bi bi-key-fill text-success"></i></span>
+                                                    <input type="text" class="form-control" id="key" name="key" placeholder="Şifreleme anahtarını girin" required />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="iv" class="form-label">Başlatma Vektörü (IV)</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text bg-white"><i class="bi bi-vector-pen text-success"></i></span>
+                                                    <input type="text" class="form-control" id="iv" name="iv" placeholder="IV değerini girin" required />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="mb-4" id="rsaFields">
-                            <label for="privateKey" class="form-label fw-bold">Özel Anahtar (RSA için)</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-key"></i></span>
-                                <textarea class="form-control" id="privateKey" name="privateKey" rows="3" placeholder="RSA özel anahtarını buraya yapıştırın..."></textarea>
+                            <!-- RSA için alan -->
+                            <div id="rsaFields" class="mb-4 animate__animated animate__fadeIn">
+                                <div class="card border border-success-subtle rounded-4 bg-success-subtle p-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><i class="bi bi-key me-2"></i>RSA Özel Anahtarı</h5>
+                                        <div class="mt-2">
+                                            <label for="privateKey" class="form-label">RSA Özel Anahtarı</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i class="bi bi-key text-success"></i></span>
+                                                <textarea class="form-control" id="privateKey" name="privateKey" rows="3" 
+                                                    placeholder="RSA özel anahtarını buraya yapıştırın..." required></textarea>
+                                            </div>
+                                            <div class="form-text">
+                                                <i class="bi bi-info-circle me-1"></i>
+                                                Şifrelenmiş veriyi çözebilmek için özel anahtara sahip olmalısınız
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <a asp-controller="Crypto" asp-action="Encrypt" class="btn btn-outline-secondary px-4">
+                                    <i class="bi bi-arrow-left me-2"></i> Şifreleme
+                                </a>
+                                <button type="submit" class="btn btn-success px-5 py-2">
+                                    <i class="bi bi-unlock-fill me-2"></i>Şifreyi Çöz
+                                </button>
                             </div>
-                        </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-success"><i class="bi bi-unlock-fill me-2"></i>Çöz</button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@if (Model != null && Model.PlainText != null)
+</section>
+@if (Model != null && Model?.PlainText != null)
 {
     <div class="container mt-4">
         <div class="row justify-content-center">
@@ -80,9 +148,12 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Çözülen Metin:</label>
-                            <div class="bg-light p-3 rounded">
-                                <code class="text-break">@Model.PlainText</code>
+                            <label class="form-label fw-bold">Çözülen Metin:</label>                            <div class="bg-light p-3 rounded position-relative">
+                                <code class="text-break">@Model?.PlainText</code>
+                                <button class="btn btn-sm btn-outline-info copy-btn position-absolute top-0 end-0 m-2" 
+                                    onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')">
+                                    <i class="bi bi-clipboard me-1"></i> Kopyala
+                                </button>
                             </div>
                         </div>
                     </div>
