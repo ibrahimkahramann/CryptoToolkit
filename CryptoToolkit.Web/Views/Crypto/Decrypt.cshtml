@@ -88,32 +88,29 @@
                                                 <label for="key" class="form-label">AES Anahtarı</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text bg-white"><i class="bi bi-key-fill text-success"></i></span>
-                                                    <input type="text" class="form-control" id="key" name="key" placeholder="Şifreleme anahtarını girin" required />
+                                                    <input type="text" class="form-control" id="key" name="key" placeholder="Şifreleme anahtarını girin" />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="iv" class="form-label">Başlatma Vektörü (IV)</label>
                                                 <div class="input-group">
                                                     <span class="input-group-text bg-white"><i class="bi bi-vector-pen text-success"></i></span>
-                                                    <input type="text" class="form-control" id="iv" name="iv" placeholder="IV değerini girin" required />
+                                                    <input type="text" class="form-control" id="iv" name="iv" placeholder="IV değerini girin" />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- RSA için alan -->
-                            <div id="rsaFields" class="mb-4 animate__animated animate__fadeIn">
+                            </div>                            <!-- RSA için alan -->
+                            <div id="rsaFields" class="mb-4 animate__animated animate__fadeIn" style="display: none;">
                                 <div class="card border border-success-subtle rounded-4 bg-success-subtle p-3">
                                     <div class="card-body">
                                         <h5 class="card-title"><i class="bi bi-key me-2"></i>RSA Özel Anahtarı</h5>
                                         <div class="mt-2">
                                             <label for="privateKey" class="form-label">RSA Özel Anahtarı</label>
                                             <div class="input-group">
-                                                <span class="input-group-text bg-white"><i class="bi bi-key text-success"></i></span>
-                                                <textarea class="form-control" id="privateKey" name="privateKey" rows="3" 
-                                                    placeholder="RSA özel anahtarını buraya yapıştırın..." required></textarea>
+                                                <span class="input-group-text bg-white"><i class="bi bi-key text-success"></i></span>                                                <textarea class="form-control" id="privateKey" name="privateKey" rows="3" 
+                                                    placeholder="RSA özel anahtarını buraya yapıştırın..."></textarea>
                                             </div>
                                             <div class="form-text">
                                                 <i class="bi bi-info-circle me-1"></i>
@@ -137,6 +134,37 @@
         </div>
     </div>
 </section>
+
+<!-- Result Modal -->
+@if (Model != null && Model?.PlainText != null)
+{
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="resultModalLabel"><i class="bi bi-unlock-check me-2"></i>Şifre Çözme Başarılı</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Çözülen Metin:</label>
+                        <div class="bg-light p-3 rounded position-relative">
+                            <code class="text-break">@Model?.PlainText</code>
+                            <button class="btn btn-sm btn-outline-info copy-btn position-absolute top-0 end-0 m-2" 
+                                onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')">
+                                <i class="bi bi-clipboard me-1"></i> Kopyala
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @if (Model != null && Model?.PlainText != null)
 {
     <div class="container mt-4">
@@ -162,12 +190,26 @@
         </div>
     </div>
 }
+
 <script>
-    function toggleFields() {
-        var method = document.getElementById('method').value;
-        document.getElementById('aesFields').style.display = method === 'AES' ? 'block' : 'none';
-        document.getElementById('rsaFields').style.display = method === 'RSA' ? 'block' : 'none';
+    // Copy to clipboard functionality - moved to site.js for better organization
+    function copyToClipboard(button, text) {
+        navigator.clipboard.writeText(text).then(
+            function() {
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Kopyalandı';
+                button.classList.add('btn-success');
+                button.classList.remove('btn-outline-info');
+                
+                setTimeout(function() {
+                    button.innerHTML = originalContent;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-outline-info');
+                }, 2000);
+            },
+            function() {
+                showToast('Kopyalama başarısız oldu!', true);
+            }
+        );
     }
-    document.getElementById('method').addEventListener('change', toggleFields);
-    window.onload = toggleFields;
 </script>

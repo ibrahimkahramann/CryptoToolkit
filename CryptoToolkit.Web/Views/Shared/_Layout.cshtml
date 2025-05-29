@@ -77,8 +77,7 @@
     </footer>    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
+    <script src="~/js/site.js" asp-append-version="true"></script>    <script>
         // Add this function to enable loading animations
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize any plugins or effects you want
@@ -88,31 +87,21 @@
             // Handle form submission loading state
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {
-                form.addEventListener('submit', function() {
+                form.addEventListener('submit', function(event) {
                     const submitBtn = this.querySelector('button[type="submit"]');
-                    if (submitBtn) {
-                        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> İşleniyor...';
-                        submitBtn.disabled = true;
+                    if (submitBtn && !submitBtn.disabled) {
+                        // Only show loading state if form is actually being submitted
+                        setTimeout(() => {
+                            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> İşleniyor...';
+                            submitBtn.disabled = true;
+                        }, 100);
                     }
                 });
-            });
-        });
+            });        });
 
-        // Toggle fields visibility for decrypt page
-        if (document.getElementById('method')) {
-            function toggleFields() {
-                var method = document.getElementById('method').value;
-                var aesFields = document.getElementById('aesFields');
-                var rsaFields = document.getElementById('rsaFields');
-                
-                if (aesFields && rsaFields) {
-                    aesFields.style.display = method === 'AES' ? 'block' : 'none';
-                    rsaFields.style.display = method === 'RSA' ? 'block' : 'none';
-                }
-            }
-              document.getElementById('method').addEventListener('change', toggleFields);
-            window.addEventListener('load', toggleFields);
-        }
+        // Initialize any other page-specific functionality
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     </script>
     
     <!-- Toast container for notifications -->

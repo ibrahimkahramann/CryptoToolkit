@@ -91,6 +91,124 @@
         </div>
     </div>
 </section>
+
+<!-- Result Modal -->
+@if (Model != null && Model?.CipherText != null)
+{
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background:linear-gradient(135deg, #4CAF50, #8BC34A)">
+                    <h5 class="modal-title" id="resultModalLabel">
+                        <i class="bi bi-check-circle-fill me-2"></i>Şifreleme Başarılı
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info mb-4">
+                        <i class="bi bi-info-circle-fill me-2"></i>
+                        <strong>Önemli:</strong> Şifreli metin ve anahtarları güvenli bir şekilde saklayın. Anahtarlar olmadan verilerinizi geri döndüremezsiniz.
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-lock-fill fs-4 me-2 text-primary"></i>
+                            <h5 class="mb-0">Şifreli Metin</h5>
+                        </div>
+                        <div class="position-relative bg-light p-3 rounded">
+                            <code class="text-break">@Model?.CipherText</code>
+                            <button class="btn btn-sm btn-outline-primary copy-btn position-absolute top-0 end-0 m-2" 
+                                onclick="copyToClipboard(this, '@Model?.CipherText?.Replace("'", "\\'")' || '')">
+                                <i class="bi bi-clipboard me-1"></i> Kopyala
+                            </button>
+                        </div>
+                    </div>
+
+                    @if (Model is CryptoToolkit.Web.Models.AesModel)
+                    {
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-key-fill fs-4 me-2 text-warning"></i>
+                                <h5 class="mb-0">Anahtar (AES)</h5>
+                            </div>
+                            <div class="position-relative bg-light p-3 rounded">
+                                <code class="text-break">@Model.Key</code>
+                                <button class="btn btn-sm btn-outline-warning copy-btn position-absolute top-0 end-0 m-2" 
+                                    onclick="copyToClipboard(this, '@Model.Key?.Replace("'", "\\'")' || '')">
+                                    <i class="bi bi-clipboard me-1"></i> Kopyala
+                                </button>
+                            </div>
+                            <div class="d-flex mt-2">
+                                <div class="badge text-bg-danger py-2">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Bu anahtarı güvenli bir yerde saklayın!
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-vector-pen fs-4 me-2 text-info"></i>
+                                <h5 class="mb-0">IV (AES)</h5>
+                            </div>
+                            <div class="position-relative bg-light p-3 rounded">
+                                <code class="text-break">@Model.IV</code>
+                                <button class="btn btn-sm btn-outline-info copy-btn position-absolute top-0 end-0 m-2" 
+                                    onclick="copyToClipboard(this, '@Model.IV?.Replace("'", "\\'")' || '')">
+                                    <i class="bi bi-clipboard me-1"></i> Kopyala
+                                </button>
+                            </div>
+                            <div class="d-flex mt-2">
+                                <div class="badge text-bg-danger py-2">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Bu IV'yi güvenli bir yerde saklayın!
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (Model is CryptoToolkit.Web.Models.RsaModel)
+                    {
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-key fs-4 me-2 text-success"></i>
+                                <h5 class="mb-0">Açık Anahtar (RSA)</h5>
+                            </div>
+                            <div class="position-relative bg-light p-3 rounded">
+                                <code class="text-break">@Model.PublicKey</code>
+                                <button class="btn btn-sm btn-outline-success copy-btn position-absolute top-0 end-0 m-2" 
+                                    onclick="copyToClipboard(this, '@Model.PublicKey?.Replace("'", "\\'")' || '')">
+                                    <i class="bi bi-clipboard me-1"></i> Kopyala
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-shield-lock fs-4 me-2 text-danger"></i>
+                                <h5 class="mb-0">Özel Anahtar (RSA)</h5>
+                            </div>
+                            <div class="position-relative bg-light p-3 rounded">
+                                <code class="text-break">@Model.PrivateKey</code>
+                                <button class="btn btn-sm btn-outline-danger copy-btn position-absolute top-0 end-0 m-2" 
+                                    onclick="copyToClipboard(this, '@Model.PrivateKey?.Replace("'", "\\'")' || '')">
+                                    <i class="bi bi-clipboard me-1"></i> Kopyala
+                                </button>
+                            </div>
+                            <div class="d-flex mt-2">
+                                <div class="badge text-bg-danger py-2">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Bu özel anahtarı asla başkalarıyla paylaşmayın!
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <a asp-controller="Crypto" asp-action="Decrypt" class="btn btn-success">
+                        <i class="bi bi-unlock-fill me-2"></i>Şifre Çözme Sayfasına Git
+                    </a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @if (Model != null && Model?.CipherText != null)
 {
     <div class="container mt-5 animate__animated animate__fadeInUp">
@@ -209,9 +327,7 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <script>
+    </div>    <script>
         function copyToClipboard(btn, text) {
             navigator.clipboard.writeText(text).then(function() {
                 btn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Kopyalandı';
