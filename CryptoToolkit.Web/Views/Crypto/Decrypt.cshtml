@@ -153,73 +153,52 @@
 <!-- Result Modal -->
 @if (Model != null && Model?.PlainText != null)
 {
-    <div id="resultModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-[#1a2532] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
-            <div class="bg-green-600 px-6 py-4 flex items-center justify-between">
+    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div id="result-modal" class="bg-[#1a2532] w-full max-w-4xl rounded-xl shadow-2xl">
+            <div class="bg-green-600 px-6 py-4 flex items-center justify-between rounded-t-xl">
                 <h3 class="text-lg font-medium text-white flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
                     </svg>
                     Şifre Çözme Başarılı
                 </h3>
-                <button onclick="closeModal()" class="text-white hover:text-gray-300">
+                <button id="close-modal-btn" class="text-white hover:text-gray-300 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-            <div class="p-6">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Çözülen Metin:</label>
-                    <div class="bg-[#243447] rounded-lg p-4 relative">
+            
+            <!-- Modal Content -->
+            <div class="p-6 text-white max-h-[calc(100vh-200px)] overflow-y-auto">
+                <div class="mb-6">
+                    <div class="flex items-center gap-2 mb-3 text-blue-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,104.62-80,109.18-13.53-4.51-80-30.69-80-109.18V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"></path>
+                        </svg>
+                        <h5 class="text-white font-medium">Çözülen Metin</h5>
+                    </div>
+                    <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65]">
                         <pre class="text-white text-sm whitespace-pre-wrap break-words">@Model?.PlainText</pre>
-                        <button onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')" 
-                                class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center transition-colors duration-200">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                        <button class="absolute top-2 right-2 bg-blue-600/90 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center gap-1 copy-btn" 
+                                data-text="@Model?.PlainText?.Replace("'", "\\'") ?? """>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
                             </svg>
                             Kopyala
                         </button>
                     </div>
                 </div>
-                <div class="flex justify-end">
-                    <button onclick="closeModal()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
-                        Kapat
-                    </button>
-                </div>
             </div>
-        </div>
-    </div>
-}
-
-@if (Model != null && Model?.PlainText != null)
-{
-    <div class="max-w-4xl mx-auto mt-8 px-4">
-        <div class="bg-[#1a2532] rounded-xl overflow-hidden">
-            <div class="bg-green-600 px-6 py-4">
-                <h3 class="text-lg font-medium text-white flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+            
+            <!-- Modal Footer -->
+            <div class="p-6 bg-[#243447] border-t border-[#344b65] flex items-center justify-end rounded-b-xl">
+                <button type="button" id="close-modal-btn2" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
                     </svg>
-                    Şifre Çözme Başarılı
-                </h3>
-            </div>
-            <div class="p-6">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Çözülen Metin:</label>
-                    <div class="bg-[#243447] rounded-lg p-4 relative">
-                        <pre class="text-white text-sm whitespace-pre-wrap break-words">@Model?.PlainText</pre>
-                        <button onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')" 
-                                class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center transition-colors duration-200">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                            </svg>
-                            Kopyala
-                        </button>
-                    </div>
-                </div>
+                    Kapat
+                </button>
             </div>
         </div>
     </div>
@@ -248,37 +227,78 @@
         
         // Initial state
         toggleFields();
-    });
-
-    // Modal management
-    function closeModal() {
-        const modal = document.getElementById('resultModal');
-        if (modal) {
-            modal.style.display = 'none';
+        
+        // Modal functionality
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        
+        if (modalBackdrop) {
+            // Prevent scrolling on body when modal is open
+            document.body.style.overflow = 'hidden';
+            
+            // Handle close buttons
+            const closeButtons = document.querySelectorAll('#close-modal-btn, #close-modal-btn2');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', closeModal);
+            });
+            
+            // Close modal when clicking on backdrop
+            modalBackdrop.addEventListener('click', function(e) {
+                if (e.target === modalBackdrop) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
         }
-    }
-
-    // Copy to clipboard functionality
-    function copyToClipboard(button, text) {
-        navigator.clipboard.writeText(text).then(
-            function() {
-                const originalContent = button.innerHTML;
-                button.innerHTML = `<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                </svg>Kopyalandı`;
-                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                button.classList.add('bg-green-600', 'hover:bg-green-700');
+        
+        // Handle copy buttons
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const text = this.dataset.text;
+                if (!text) return;
                 
-                setTimeout(function() {
-                    button.innerHTML = originalContent;
-                    button.classList.remove('bg-green-600', 'hover:bg-green-700');
-                    button.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                }, 2000);
-            },
-            function() {
-                // Error handling - could add toast notification here
-                console.error('Failed to copy to clipboard');
-            }
-        );
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalHTML = this.innerHTML;
+                    const originalClass = this.className;
+                    
+                    // Change to copied state
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M104,192a8.5,8.5,0,0,1-5.66-2.34l-56-56a8,8,0,0,1,11.32-11.32L104,172.69l98.34-98.35a8,8,0,0,1,11.32,11.32l-104,104A8.5,8.5,0,0,1,104,192Z"></path>
+                        </svg>
+                        Kopyalandı!
+                    `;
+                    this.className = this.className.replace(/bg-\w+-600\/90|bg-\w+-600/g, 'bg-green-600');
+                    
+                    // Restore original state after delay
+                    setTimeout(() => {
+                        this.innerHTML = originalHTML;
+                        this.className = originalClass;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Kopyalama hatası:', err);
+                    alert('Kopyalama işlemi başarısız oldu.');
+                });
+            });
+        });
+    });
+    
+    // Function to close the modal
+    function closeModal() {
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        
+        if (modalBackdrop) {
+            // Hide the modal immediately
+            modalBackdrop.style.display = 'none';
+            
+            // Restore scrolling on body
+            document.body.style.overflow = 'auto';
+        }
     }
 </script>
