@@ -3,162 +3,190 @@
     ViewData["Title"] = "Şifre Çözme";
 }
 
-<section class="position-relative py-5">
-    <!-- Animated Background for Decrypt Page -->
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index:-1; overflow:hidden;">
-        <div style="position:absolute; top:-50%; left:-50%; width:100%; height:100%; background:linear-gradient(135deg, rgba(72, 209, 204, 0.1), rgba(114, 239, 221, 0.05)); border-radius:50%;"></div>
-    </div>
-
-    <div class="container py-3">
-        <div class="row mb-4">
-            <div class="col-12 text-center">
-                <h1 class="fw-bold mb-2 animate__animated animate__fadeIn">Şifre Çözme</h1>
-                <p class="text-muted animate__animated animate__fadeIn animate__delay-1s">Şifrelenmiş verilerinizi doğru anahtarlarla çözün</p>
-            </div>
+<div class="min-h-screen bg-[#111922] text-white px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold mb-2">Şifre Çözme</h1>
+            <p class="text-gray-400">Şifrelenmiş verilerinizi doğru anahtarlarla çözün</p>
         </div>
 
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card border-0 shadow-lg rounded-4 overflow-hidden animate__animated animate__fadeIn animate__delay-1s">
-                    <div class="card-header p-4" style="background:var(--gradient-success);">
-                        <div class="d-flex align-items-center">
-                            <div class="feature-icon decrypt-icon me-3" style="width:50px;height:50px;min-width:50px;background:rgba(255,255,255,0.2);">
-                                <i class="bi bi-unlock-fill text-white"></i>
-                            </div>
-                            <div>
-                                <h2 class="text-white mb-0 fw-bold">Şifre Çözme</h2>
-                                <p class="text-white-50 mb-0">Şifreli metinleri çözün</p>
-                            </div>
-                        </div>
-                    </div>                    <div class="card-body p-4">
-                        @if (!ViewData.ModelState.IsValid)
+        <div class="bg-[#1a2532] rounded-xl p-6 shadow-xl">
+            <!-- Form Header -->
+            <div class="flex items-center mb-6 pb-4 border-b border-gray-700">
+                <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center mr-4">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold">Şifre Çözme</h2>
+                    <p class="text-gray-400">Şifreli metinleri çözün</p>
+                </div>
+            </div>            <!-- Error Display -->
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="bg-red-500/10 border border-red-500 rounded-lg p-4 mb-6">
+                    <ul class="list-disc list-inside text-red-400">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                         {
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <ul class="mb-0">
-                                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                                    {
-                                        <li>@error.ErrorMessage</li>
-                                    }
-                                </ul>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
+                            <li>@error.ErrorMessage</li>
                         }
+                    </ul>
+                </div>
+            }
 
-                        <form asp-action="Decrypt" method="post" class="needs-validation" novalidate>
-                            <!-- Şifreleme Yöntemi -->
-                            <div class="mb-4">
-                                <label for="method" class="form-label">Şifreleme Algoritması</label>
-                                <div class="encryption-method-selector mb-3">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <input type="radio" class="btn-check" name="method" id="aesMethod" value="AES" checked>
-                                            <label class="btn btn-outline-success w-100 py-3" for="aesMethod">
-                                                <i class="bi bi-lock-fill me-2"></i> AES-256
-                                                <div class="small text-muted">Simetrik Şifreleme (CBC)</div>
-                                            </label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="radio" class="btn-check" name="method" id="rsaMethod" value="RSA">
-                                            <label class="btn btn-outline-success w-100 py-3" for="rsaMethod">
-                                                <i class="bi bi-key-fill me-2"></i> RSA-2048
-                                                <div class="small text-muted">Asimetrik Şifreleme</div>
-                                            </label>
-                                        </div>
+            <form asp-action="Decrypt" method="post" class="space-y-6">
+                <!-- Algorithm Selection -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-3">Şifreleme Algoritması</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label for="aesMethod" class="relative cursor-pointer">
+                            <input type="radio" class="sr-only" name="method" id="aesMethod" value="AES" checked>
+                            <div class="bg-[#243447] border-2 border-gray-600 rounded-lg p-4 hover:border-blue-400 transition-colors duration-200 peer-checked:border-blue-400 peer-checked:bg-blue-500/10">
+                                <div class="flex items-center">
+                                    <svg class="w-5 h-5 text-blue-400 mr-3" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
+                                    </svg>
+                                    <div>
+                                        <div class="font-medium">AES-256</div>
+                                        <div class="text-sm text-gray-400">Simetrik Şifreleme (CBC)</div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Şifreli Metin -->
-                            <div class="mb-4">
-                                <label for="cipherText" class="form-label">Şifreli Metin</label>
-                                <div class="input-group input-group-lg mb-2">
-                                    <span class="input-group-text bg-light"><i class="bi bi-file-lock2 text-success"></i></span>
-                                    <textarea class="form-control form-control-lg" id="cipherText" name="cipherText" rows="4" 
-                                        placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..." required></textarea>
-                                </div>
-                            </div>
-
-                            <!-- AES için alanlar -->
-                            <div id="aesFields" class="mb-4 animate__animated animate__fadeIn">
-                                <div class="card border border-success-subtle rounded-4 bg-success-subtle p-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><i class="bi bi-shield-lock me-2"></i>AES Anahtarları</h5>
-                                        <div class="row g-3 mt-2">
-                                            <div class="col-md-6">
-                                                <label for="key" class="form-label">AES Anahtarı</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-white"><i class="bi bi-key-fill text-success"></i></span>
-                                                    <input type="text" class="form-control" id="key" name="key" placeholder="Şifreleme anahtarını girin" />
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="iv" class="form-label">Başlatma Vektörü (IV)</label>
-                                                <div class="input-group">
-                                                    <span class="input-group-text bg-white"><i class="bi bi-vector-pen text-success"></i></span>
-                                                    <input type="text" class="form-control" id="iv" name="iv" placeholder="IV değerini girin" />
-                                                </div>
-                                            </div>
-                                        </div>
+                        </label>
+                        
+                        <label for="rsaMethod" class="relative cursor-pointer">
+                            <input type="radio" class="sr-only" name="method" id="rsaMethod" value="RSA">
+                            <div class="bg-[#243447] border-2 border-gray-600 rounded-lg p-4 hover:border-blue-400 transition-colors duration-200 peer-checked:border-blue-400 peer-checked:bg-blue-500/10">
+                                <div class="flex items-center">
+                                    <svg class="w-5 h-5 text-blue-400 mr-3" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V1h3zm1 0h2.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H5V1zm4 0v6a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V1h3zm1 0h2.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H10V1z"/>
+                                    </svg>
+                                    <div>
+                                        <div class="font-medium">RSA-2048</div>
+                                        <div class="text-sm text-gray-400">Asimetrik Şifreleme</div>
                                     </div>
                                 </div>
-                            </div>                            <!-- RSA için alan -->
-                            <div id="rsaFields" class="mb-4 animate__animated animate__fadeIn" style="display: none;">
-                                <div class="card border border-success-subtle rounded-4 bg-success-subtle p-3">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><i class="bi bi-key me-2"></i>RSA Özel Anahtarı</h5>
-                                        <div class="mt-2">
-                                            <label for="privateKey" class="form-label">RSA Özel Anahtarı</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-white"><i class="bi bi-key text-success"></i></span>                                                <textarea class="form-control" id="privateKey" name="privateKey" rows="3" 
-                                                    placeholder="RSA özel anahtarını buraya yapıştırın..."></textarea>
-                                            </div>
-                                            <div class="form-text">
-                                                <i class="bi bi-info-circle me-1"></i>
-                                                Şifrelenmiş veriyi çözebilmek için özel anahtara sahip olmalısınız
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                            <div class="d-flex justify-content-between align-items-center mt-4">
-                                <a asp-controller="Crypto" asp-action="Encrypt" class="btn btn-outline-secondary px-4">
-                                    <i class="bi bi-arrow-left me-2"></i> Şifreleme
-                                </a>
-                                <button type="submit" class="btn btn-success px-5 py-2">
-                                    <i class="bi bi-unlock-fill me-2"></i>Şifreyi Çöz
-                                </button>
                             </div>
-                        </form>
+                        </label>
                     </div>
                 </div>
-            </div>
+
+                <!-- Encrypted Text -->
+                <div>
+                    <label for="cipherText" class="block text-sm font-medium text-gray-300 mb-2">Şifreli Metin</label>
+                    <div class="relative">
+                        <textarea class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none resize-none" 
+                                id="cipherText" name="cipherText" rows="4" 
+                                placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..." required></textarea>
+                    </div>
+                </div>                <!-- AES Fields -->
+                <div id="aesFields" class="space-y-4">
+                    <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-yellow-400 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1z"/>
+                            </svg>
+                            AES Anahtarları
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="key" class="block text-sm font-medium text-gray-300 mb-2">AES Anahtarı</label>
+                                <input type="text" class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none" 
+                                       id="key" name="key" placeholder="Şifreleme anahtarını girin" />
+                            </div>
+                            <div>
+                                <label for="iv" class="block text-sm font-medium text-gray-300 mb-2">Başlatma Vektörü (IV)</label>
+                                <input type="text" class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none" 
+                                       id="iv" name="iv" placeholder="IV değerini girin" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RSA Fields -->
+                <div id="rsaFields" class="space-y-4 hidden">
+                    <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
+                        <h3 class="text-lg font-medium text-green-400 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1z"/>
+                            </svg>
+                            RSA Özel Anahtarı
+                        </h3>
+                        <div>
+                            <label for="privateKey" class="block text-sm font-medium text-gray-300 mb-2">RSA Özel Anahtarı</label>
+                            <textarea class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-green-400 focus:outline-none resize-none" 
+                                    id="privateKey" name="privateKey" rows="3" 
+                                    placeholder="RSA özel anahtarını buraya yapıştırın..."></textarea>
+                            <p class="text-sm text-gray-400 mt-2">
+                                <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                                </svg>
+                                Şifrelenmiş veriyi çözebilmek için özel anahtara sahip olmalısınız
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center pt-6">
+                    <a asp-controller="Crypto" asp-action="Encrypt" class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:text-white hover:border-gray-500 transition-colors duration-200">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+                        </svg>
+                        Şifreleme
+                    </a>
+                    <button type="submit" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                        </svg>
+                        Şifreyi Çöz
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</section>
+</div>
 
 <!-- Result Modal -->
 @if (Model != null && Model?.PlainText != null)
 {
-    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="resultModalLabel"><i class="bi bi-unlock-check me-2"></i>Şifre Çözme Başarılı</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Çözülen Metin:</label>
-                        <div class="bg-light p-3 rounded position-relative">
-                            <code class="text-break">@Model?.PlainText</code>
-                            <button class="btn btn-sm btn-outline-info copy-btn position-absolute top-0 end-0 m-2" 
-                                onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')">
-                                <i class="bi bi-clipboard me-1"></i> Kopyala
-                            </button>
-                        </div>
+    <div id="resultModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-[#1a2532] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+            <div class="bg-green-600 px-6 py-4 flex items-center justify-between">
+                <h3 class="text-lg font-medium text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                    </svg>
+                    Şifre Çözme Başarılı
+                </h3>
+                <button onclick="closeModal()" class="text-white hover:text-gray-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Çözülen Metin:</label>
+                    <div class="bg-[#243447] rounded-lg p-4 relative">
+                        <pre class="text-white text-sm whitespace-pre-wrap break-words">@Model?.PlainText</pre>
+                        <button onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')" 
+                                class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
+                            Kopyala
+                        </button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                <div class="flex justify-end">
+                    <button onclick="closeModal()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
+                        Kapat
+                    </button>
                 </div>
             </div>
         </div>
@@ -167,23 +195,29 @@
 
 @if (Model != null && Model?.PlainText != null)
 {
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-info text-white">
-                        <h3 class="mb-0"><i class="bi bi-unlock-check me-2"></i>Şifre Çözme Başarılı</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Çözülen Metin:</label>                            <div class="bg-light p-3 rounded position-relative">
-                                <code class="text-break">@Model?.PlainText</code>
-                                <button class="btn btn-sm btn-outline-info copy-btn position-absolute top-0 end-0 m-2" 
-                                    onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')">
-                                    <i class="bi bi-clipboard me-1"></i> Kopyala
-                                </button>
-                            </div>
-                        </div>
+    <div class="max-w-4xl mx-auto mt-8 px-4">
+        <div class="bg-[#1a2532] rounded-xl overflow-hidden">
+            <div class="bg-green-600 px-6 py-4">
+                <h3 class="text-lg font-medium text-white flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                    </svg>
+                    Şifre Çözme Başarılı
+                </h3>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Çözülen Metin:</label>
+                    <div class="bg-[#243447] rounded-lg p-4 relative">
+                        <pre class="text-white text-sm whitespace-pre-wrap break-words">@Model?.PlainText</pre>
+                        <button onclick="copyToClipboard(this, '@Model?.PlainText?.Replace("'", "\\'")' || '')" 
+                                class="absolute top-2 right-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center transition-colors duration-200">
+                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                            </svg>
+                            Kopyala
+                        </button>
                     </div>
                 </div>
             </div>
@@ -192,23 +226,58 @@
 }
 
 <script>
-    // Copy to clipboard functionality - moved to site.js for better organization
+    // Algorithm method switching
+    document.addEventListener('DOMContentLoaded', function() {
+        const aesMethod = document.getElementById('aesMethod');
+        const rsaMethod = document.getElementById('rsaMethod');
+        const aesFields = document.getElementById('aesFields');
+        const rsaFields = document.getElementById('rsaFields');
+
+        function toggleFields() {
+            if (aesMethod.checked) {
+                aesFields.classList.remove('hidden');
+                rsaFields.classList.add('hidden');
+            } else {
+                aesFields.classList.add('hidden');
+                rsaFields.classList.remove('hidden');
+            }
+        }
+
+        aesMethod.addEventListener('change', toggleFields);
+        rsaMethod.addEventListener('change', toggleFields);
+        
+        // Initial state
+        toggleFields();
+    });
+
+    // Modal management
+    function closeModal() {
+        const modal = document.getElementById('resultModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Copy to clipboard functionality
     function copyToClipboard(button, text) {
         navigator.clipboard.writeText(text).then(
             function() {
                 const originalContent = button.innerHTML;
-                button.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Kopyalandı';
-                button.classList.add('btn-success');
-                button.classList.remove('btn-outline-info');
+                button.innerHTML = `<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                </svg>Kopyalandı`;
+                button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                button.classList.add('bg-green-600', 'hover:bg-green-700');
                 
                 setTimeout(function() {
                     button.innerHTML = originalContent;
-                    button.classList.remove('btn-success');
-                    button.classList.add('btn-outline-info');
+                    button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    button.classList.add('bg-blue-600', 'hover:bg-blue-700');
                 }, 2000);
             },
             function() {
-                showToast('Kopyalama başarısız oldu!', true);
+                // Error handling - could add toast notification here
+                console.error('Failed to copy to clipboard');
             }
         );
     }

@@ -2,145 +2,59 @@
     ViewData["Title"] = "Modern Şifreleme ve Özetleme";
 }
 
-<!-- Hero Section with animated Background -->
-<section class="position-relative py-0">
-    <!-- Animated Gradient Background -->
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="z-index:-1; overflow:hidden;">
-        <div style="position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:linear-gradient(#4e54c8, #8f94fb); transform:rotate(10deg);"></div>
-        <svg class="position-absolute bottom-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-            <path fill="#ffffff" fill-opacity="1" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,122.7C960,160,1056,224,1152,229.3C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-        </svg>
+<div class="px-40 flex flex-1 justify-center py-5">
+  <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+    <div class="flex flex-wrap justify-between gap-3 p-4">
+      <div class="flex min-w-72 flex-col gap-3">
+        <p class="text-white tracking-light text-[32px] font-bold leading-tight">Crypto Toolkit</p>
+        <p class="text-[#93acc8] text-sm font-normal leading-normal">
+          Kriptoloji araçları uygulamasına hoş geldiniz! Bu uygulama kriptografik algoritmalarla öğrenme ve deneyim yapma araçları sağlar. Başlamak için yukarıdaki navigasyon çubuğundan bir araç seçin.
+        </p>
+      </div>
     </div>
-    
-    <div class="container position-relative" style="min-height: 500px;">
-        <div class="row align-items-center" style="min-height: 500px;">
-            <div class="col-lg-6 text-white py-5">
-                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInUp">
-                    Kriptoloji Araçları
-                </h1>
-                <p class="lead mb-4 animate__animated animate__fadeInUp animate__delay-1s">
-                    Verilerinizi güvenle korumak ve yönetmek için güçlü şifreleme ve özet araçları
-                </p>
-                <div class="d-flex gap-3 mt-5 animate__animated animate__fadeInUp animate__delay-2s">
-                    <a href="@Url.Action("Encrypt", "Crypto")" class="btn btn-light btn-lg px-4">
-                        <i class="bi bi-shield-lock me-2"></i> Başlayın
-                    </a>
-                    <a href="#features" class="btn btn-outline-light btn-lg px-4">
-                        <i class="bi bi-info-circle me-2"></i> Araçlar
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6 d-none d-lg-block position-relative animate__animated animate__fadeInRight">
-                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg" class="position-absolute" style="width:80px; right:50px; top:30px; opacity:0.7;" />
-                <img src="https://i.ibb.co/xLJ1Yfk/encryption.png" class="img-fluid" alt="Şifreleme İllüstrasyonu" />
-            </div>
+    <h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Mevcut Araçlar</h2>
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+      <div class="flex flex-1 gap-3 rounded-lg border border-[#344b65] bg-[#1a2532] p-4 flex-col hover:bg-[#1f2938] transition-colors cursor-pointer" onclick="location.href='@Url.Action("Encrypt", "Crypto")'">
+        <div class="text-white" data-icon="ShieldCheck" data-size="24px" data-weight="regular">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+            <path
+              d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,104.62-80,109.18-13.53-4.51-80-30.69-80-109.18V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.68l50.34-50.34a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"
+            ></path>
+          </svg>
         </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="py-5" id="features">
-    <div class="container py-5">
-        <div class="row text-center">
-            <div class="col-12 mb-5">
-                <h2 class="fw-bold">Desteklenen Kriptografi Araçları</h2>
-                <p class="lead text-muted">Güvenli veri yönetimi için birden fazla şifreleme ve özet seçeneği</p>
-            </div>
+        <div class="flex flex-col gap-1">
+          <h2 class="text-white text-base font-bold leading-tight">AES Şifreleme/Çözme</h2>
+          <p class="text-[#93acc8] text-sm font-normal leading-normal">Gelişmiş Şifreleme Standardı (AES) algoritması kullanarak veri şifreleme ve çözme.</p>
         </div>
-        
-        <div class="row g-4">
-            <!-- Feature 1 -->
-            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp">
-                <div class="card h-100 feature-card">
-                    <div class="card-body p-4">
-                        <div class="feature-icon encrypt-icon">
-                            <i class="bi bi-lock-fill text-white"></i>
-                        </div>
-                        <h3>AES-256 Şifreleme</h3>
-                        <p>Simetrik şifreleme algoritması ile verilerinizi güvenle koruyun. CBC modunda 256-bit anahtar desteği.</p>
-                        <a href="@Url.Action("Encrypt", "Crypto")?method=AES" class="btn btn-primary mt-3">
-                            <i class="bi bi-lock-fill me-2"></i>AES ile Şifrele
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Feature 2 -->
-            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
-                <div class="card h-100 feature-card">
-                    <div class="card-body p-4">
-                        <div class="feature-icon decrypt-icon">
-                            <i class="bi bi-key-fill text-white"></i>
-                        </div>
-                        <h3>RSA-2048 Şifreleme</h3>
-                        <p>Asimetrik şifreleme ile açık ve özel anahtarlar kullanarak daha güvenli iletişim sağlayın.</p>
-                        <a href="@Url.Action("Encrypt", "Crypto")?method=RSA" class="btn btn-success mt-3">
-                            <i class="bi bi-key-fill me-2"></i>RSA ile Şifrele
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Feature 3 -->
-            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
-                <div class="card h-100 feature-card">
-                    <div class="card-body p-4">
-                        <div class="feature-icon hash-icon">
-                            <i class="bi bi-hash text-white"></i>
-                        </div>
-                        <h3>SHA256 Özeti</h3>
-                        <p>Metinler veya dosyalar için güvenli kriptografik özet oluşturun. Veri bütünlüğünü doğrulayın.</p>
-                        <a href="@Url.Action("Hash", "Crypto")" class="btn btn-warning mt-3">
-                            <i class="bi bi-hash me-2"></i>SHA256 Özeti Oluştur
-                        </a>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="flex flex-1 gap-3 rounded-lg border border-[#344b65] bg-[#1a2532] p-4 flex-col hover:bg-[#1f2938] transition-colors cursor-pointer" onclick="location.href='@Url.Action("Hash", "Crypto")'">
+        <div class="text-white" data-icon="Hash" data-size="24px" data-weight="regular">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+            <path
+              d="M224,88H175.4l8.47-46.57a8,8,0,0,0-15.74-2.86l-9,49.43H111.4l8.47-46.57a8,8,0,0,0-15.74-2.86L95.14,88H48a8,8,0,0,0,0,16H92.23L83.5,152H32a8,8,0,0,0,0,16H80.6l-8.47,46.57a8,8,0,0,0,6.44,9.3A7.79,7.79,0,0,0,80,224a8,8,0,0,0,7.86-6.57l9-49.43H144.6l-8.47,46.57a8,8,0,0,0,6.44,9.3A7.79,7.79,0,0,0,144,224a8,8,0,0,0,7.86-6.57l9-49.43H208a8,8,0,0,0,0-16H163.77l8.73-48H224a8,8,0,0,0,0-16Zm-76.5,64H99.77l8.73-48h47.73Z"
+            ></path>
+          </svg>
         </div>
-    </div>
-</section>
-
-<!-- Info Section -->
-<section class="py-5 bg-light">
-    <div class="container py-5">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h2 class="fw-bold mb-4">Neden Şifreleme Kullanmalısınız?</h2>
-                <p>Kriptografi, hassas bilgilerinizi yetkisiz erişime karşı korumanın en etkili yoludur:</p>
-                
-                <div class="d-flex align-items-center mb-3">
-                    <div class="me-3 bg-primary p-2 rounded-circle text-white">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <div>
-                        <h5 class="mb-0">Veri Güvenliği</h5>
-                        <p class="mb-0">Hassas bilgileriniz şifrelenmiş formatta saklanır</p>
-                    </div>
-                </div>
-                
-                <div class="d-flex align-items-center mb-3">
-                    <div class="me-3 bg-success p-2 rounded-circle text-white">
-                        <i class="bi bi-person-lock"></i>
-                    </div>
-                    <div>
-                        <h5 class="mb-0">Gizlilik</h5>
-                        <p class="mb-0">Verilerinizi sadece yetkili kişiler görebilir</p>
-                    </div>
-                </div>
-                
-                <div class="d-flex align-items-center">
-                    <div class="me-3 bg-warning p-2 rounded-circle text-dark">
-                        <i class="bi bi-file-earmark-check"></i>
-                    </div>
-                    <div>
-                        <h5 class="mb-0">Veri Bütünlüğü</h5>
-                        <p class="mb-0">Özet fonksiyonları ile veri değişimlerini tespit edin</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mt-4 mt-lg-0">
-                <div class="rounded-4 overflow-hidden">
-                    <img src="https://i.ibb.co/LgnSJp0/cyber-security.jpg" class="img-fluid" alt="Siber Güvenlik">
+        <div class="flex flex-col gap-1">
+          <h2 class="text-white text-base font-bold leading-tight">SHA256 Özetleme</h2>
+          <p class="text-[#93acc8] text-sm font-normal leading-normal">Metin veya dosyaların SHA256 özetlerini oluşturun.</p>
+        </div>
+      </div>
+      <div class="flex flex-1 gap-3 rounded-lg border border-[#344b65] bg-[#1a2532] p-4 flex-col hover:bg-[#1f2938] transition-colors cursor-pointer" onclick="location.href='@Url.Action("Encrypt", "Crypto")'">
+        <div class="text-white" data-icon="Key" data-size="24px" data-weight="regular">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+            <path
+              d="M160,16A80.07,80.07,0,0,0,83.91,120.78L26.34,178.34A8,8,0,0,0,24,184v40a8,8,0,0,0,8,8H72a8,8,0,0,0,8-8V208H96a8,8,0,0,0,8-8V184h16a8,8,0,0,0,5.66-2.34l9.56-9.57A80,80,0,1,0,160,16Zm0,144a63.7,63.7,0,0,1-23.65-4.51,8,8,0,0,0-8.84,1.68L116.69,168H96a8,8,0,0,0-8,8v16H72a8,8,0,0,0-8,8v16H40V187.31l58.83-58.82a8,8,0,0,0,1.68-8.84A64,64,0,1,1,160,160Zm32-84a12,12,0,1,1-12-12A12,12,0,0,1,192,76Z"
+            ></path>
+          </svg>
+        </div>
+        <div class="flex flex-col gap-1">
+          <h2 class="text-white text-base font-bold leading-tight">RSA Şifreleme/Çözme</h2>
+          <p class="text-[#93acc8] text-sm font-normal leading-normal">Rivest-Shamir-Adleman (RSA) algoritması kullanarak veri şifreleme ve çözme.</p>
+        </div>
+      </div>    </div>
+  </div>
+</div>
                 </div>
             </div>
         </div>
