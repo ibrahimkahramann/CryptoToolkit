@@ -33,103 +33,59 @@
                             <li>@error.ErrorMessage</li>
                         }
                     </ul>
-                </div>
-            }
+                </div>            }
+
+            <!-- Data Transfer Notification -->
+            @if (!string.IsNullOrEmpty(Context.Request.Query["cipherText"]))
+            {                <div class="bg-green-500/10 border border-green-500 rounded-lg p-4 mb-6">
+                    <div class="flex items-center text-green-400">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                        <span>Şifreleme sayfasından veri aktarımı başarılı!</span>
+                    </div>
+                </div>}
+
+            <!-- Debug Info - REMOVED -->
 
             <form asp-action="Decrypt" method="post" class="space-y-6">
-                <!-- Algorithm Selection -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-3">Şifreleme Algoritması</label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <label for="aesMethod" class="relative cursor-pointer">
-                            <input type="radio" class="sr-only" name="method" id="aesMethod" value="AES" checked>
-                            <div class="bg-[#243447] border-2 border-gray-600 rounded-lg p-4 hover:border-blue-400 transition-colors duration-200 peer-checked:border-blue-400 peer-checked:bg-blue-500/10">
-                                <div class="flex items-center">
-                                    <svg class="w-5 h-5 text-blue-400 mr-3" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/>
-                                    </svg>
-                                    <div>
-                                        <div class="font-medium">AES-256</div>
-                                        <div class="text-sm text-gray-400">Simetrik Şifreleme (CBC)</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                        
-                        <label for="rsaMethod" class="relative cursor-pointer">
-                            <input type="radio" class="sr-only" name="method" id="rsaMethod" value="RSA">
-                            <div class="bg-[#243447] border-2 border-gray-600 rounded-lg p-4 hover:border-blue-400 transition-colors duration-200 peer-checked:border-blue-400 peer-checked:bg-blue-500/10">
-                                <div class="flex items-center">
-                                    <svg class="w-5 h-5 text-blue-400 mr-3" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V1h3zm1 0h2.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H5V1zm4 0v6a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5V1h3zm1 0h2.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H10V1z"/>
-                                    </svg>
-                                    <div>
-                                        <div class="font-medium">RSA-2048</div>
-                                        <div class="text-sm text-gray-400">Asimetrik Şifreleme</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Encrypted Text -->
-                <div>
+                <input type="hidden" name="method" value="AES" />
+                <!-- Algorithm Selection - REMOVED -->
+                <!-- Encrypted Text -->                <div>
                     <label for="cipherText" class="block text-sm font-medium text-gray-300 mb-2">Şifreli Metin</label>
-                    <div class="relative">
-                        <textarea class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none resize-none" 
+                    <div class="relative">                        <textarea class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none resize-none" 
                                 id="cipherText" name="cipherText" rows="4" 
-                                placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..." required></textarea>
+                                placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..." required>@(Context.Request.Query["cipherText"].Count > 0 ? Uri.UnescapeDataString(Context.Request.Query["cipherText"].ToString()) : "")</textarea>
                     </div>
-                </div>                <!-- AES Fields -->
-                <div id="aesFields" class="space-y-4">
+                </div><!-- AES Fields -->
+                <div id="aesFields" class="space-y-4"> <!-- Ensure this is always visible, no 'hidden' class -->
                     <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
                         <h3 class="text-lg font-medium text-yellow-400 mb-4 flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1z"/>
+                                <!-- SVG Path for AES icon or similar -->
+                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM5 9h6v5H5V9z"/>
                             </svg>
                             AES Anahtarları
                         </h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">                            <div>
                                 <label for="key" class="block text-sm font-medium text-gray-300 mb-2">AES Anahtarı</label>
-                                <input type="text" class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none" 
-                                       id="key" name="key" placeholder="Şifreleme anahtarını girin" />
+                                <input type="text" id="key" name="key"
+                                       class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none"
+                                       value="@(Context.Request.Query["key"].Count > 0 ? Uri.UnescapeDataString(Context.Request.Query["key"].ToString()) : "")"
+                                       placeholder="AES Anahtarını buraya girin..." />
                             </div>
                             <div>
                                 <label for="iv" class="block text-sm font-medium text-gray-300 mb-2">Başlatma Vektörü (IV)</label>
-                                <input type="text" class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none" 
-                                       id="iv" name="iv" placeholder="IV değerini girin" />
+                                <input type="text" id="iv" name="iv"
+                                       class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none"
+                                       value="@(Context.Request.Query["iv"].Count > 0 ? Uri.UnescapeDataString(Context.Request.Query["iv"].ToString()) : "")"
+                                       placeholder="Başlatma Vektörünü (IV) buraya girin..." />
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- RSA Fields -->
-                <div id="rsaFields" class="space-y-4 hidden">
-                    <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-4">
-                        <h3 class="text-lg font-medium text-green-400 mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1z"/>
-                            </svg>
-                            RSA Özel Anahtarı
-                        </h3>
-                        <div>
-                            <label for="privateKey" class="block text-sm font-medium text-gray-300 mb-2">RSA Özel Anahtarı</label>
-                            <textarea class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-green-400 focus:outline-none resize-none" 
-                                    id="privateKey" name="privateKey" rows="3" 
-                                    placeholder="RSA özel anahtarını buraya yapıştırın..."></textarea>
-                            <p class="text-sm text-gray-400 mt-2">
-                                <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                                </svg>
-                                Şifrelenmiş veriyi çözebilmek için özel anahtara sahip olmalısınız
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- RSA Fields - REMOVED -->
                 <!-- Action Buttons -->
                 <div class="flex justify-between items-center pt-6">
                     <a asp-controller="Crypto" asp-action="Encrypt" class="inline-flex items-center px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:text-white hover:border-gray-500 transition-colors duration-200">
@@ -138,7 +94,7 @@
                         </svg>
                         Şifreleme
                     </a>
-                    <button type="submit" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
+                    <button type="submit" id="decrypt-button" class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
                         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
                         </svg>
@@ -205,100 +161,148 @@
 }
 
 <script>
-    // Algorithm method switching
-    document.addEventListener('DOMContentLoaded', function() {
-        const aesMethod = document.getElementById('aesMethod');
-        const rsaMethod = document.getElementById('rsaMethod');
-        const aesFields = document.getElementById('aesFields');
-        const rsaFields = document.getElementById('rsaFields');
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log('Initial URL params for Decrypt page:', window.location.search);
 
-        function toggleFields() {
-            if (aesMethod.checked) {
-                aesFields.classList.remove('hidden');
-                rsaFields.classList.add('hidden');
-            } else {
-                aesFields.classList.add('hidden');
-                rsaFields.classList.remove('hidden');
+    const cipherTextField = document.getElementById('cipherText');
+    if (urlParams.has('cipherText')) {
+        const cipherTextValueFromUrl = decodeURIComponent(urlParams.get('cipherText') || '');
+        // console.log('URL parameter "cipherText": "' + (cipherTextValueFromUrl ? cipherTextValueFromUrl.substring(0,100) + '...' : 'EMPTY_STRING') + '"');
+        if (cipherTextField) {
+            // console.log('Cipher Text (Razor): cipherTextField.value (server-rendered): "' + (cipherTextField.value ? cipherTextField.value.substring(0,100) + '...' : 'EMPTY_STRING') + '"');
+            if (!cipherTextField.value && cipherTextValueFromUrl) {
+                 // console.log('JS is setting cipherText from URL param as Razor value is empty.');
+                 cipherTextField.value = cipherTextValueFromUrl;
             }
+        } else {
+            console.error('cipherText field not found');
         }
-
-        aesMethod.addEventListener('change', toggleFields);
-        rsaMethod.addEventListener('change', toggleFields);
-        
-        // Initial state
-        toggleFields();
-        
-        // Modal functionality
-        const modalBackdrop = document.getElementById('modal-backdrop');
-        
-        if (modalBackdrop) {
-            // Prevent scrolling on body when modal is open
-            document.body.style.overflow = 'hidden';
-            
-            // Handle close buttons
-            const closeButtons = document.querySelectorAll('#close-modal-btn, #close-modal-btn2');
-            closeButtons.forEach(button => {
-                button.addEventListener('click', closeModal);
-            });
-            
-            // Close modal when clicking on backdrop
-            modalBackdrop.addEventListener('click', function(e) {
-                if (e.target === modalBackdrop) {
-                    closeModal();
-                }
-            });
-            
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
-            });
-        }
-        
-        // Handle copy buttons
-        const copyButtons = document.querySelectorAll('.copy-btn');
-        copyButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const text = this.dataset.text;
-                if (!text) return;
-                
-                navigator.clipboard.writeText(text).then(() => {
-                    const originalHTML = this.innerHTML;
-                    const originalClass = this.className;
-                    
-                    // Change to copied state
-                    this.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M104,192a8.5,8.5,0,0,1-5.66-2.34l-56-56a8,8,0,0,1,11.32-11.32L104,172.69l98.34-98.35a8,8,0,0,1,11.32,11.32l-104,104A8.5,8.5,0,0,1,104,192Z"></path>
-                        </svg>
-                        Kopyalandı!
-                    `;
-                    this.className = this.className.replace(/bg-\w+-600\/90|bg-\w+-600/g, 'bg-green-600');
-                    
-                    // Restore original state after delay
-                    setTimeout(() => {
-                        this.innerHTML = originalHTML;
-                        this.className = originalClass;
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Kopyalama hatası:', err);
-                    alert('Kopyalama işlemi başarısız oldu.');
-                });
-            });
-        });
-    });
+    }
     
-    // Function to close the modal
-    function closeModal() {
-        const modalBackdrop = document.getElementById('modal-backdrop');
+    // console.log('AES method is active. Populating AES fields if necessary.');
+
+    const keyField = document.getElementById('key');
+    if (urlParams.has('key')) {
+        const keyValueFromUrl = decodeURIComponent(urlParams.get('key') || '');
+        // console.log('URL parameter "key" for AES: "' + keyValueFromUrl + '"');
+        if (keyField) {
+            // console.log('AES Key (Razor): keyField.value (server-rendered): "' + keyField.value + '"');
+            if (!keyField.value && keyValueFromUrl) {
+                // console.log('JS is setting AES Key from URL param as Razor value is empty.');
+                keyField.value = keyValueFromUrl;
+            }
+            // console.log('AES Key (Final): keyField.value after JS logic: "' + keyField.value + '"');
+        } else {
+            console.error('AES key field (id=key) not found');
+        }
+    } else {
+        // console.log('URL parameter "key" not found for AES.');
+        if (keyField && keyField.value !== undefined) keyField.value = ''; 
+    }
+
+    const ivField = document.getElementById('iv');
+    if (urlParams.has('iv')) {
+        const ivValueFromUrl = decodeURIComponent(urlParams.get('iv') || '');
+        // console.log('URL parameter "iv" for AES: "' + ivValueFromUrl + '"');
+        if (ivField) {
+            // console.log('AES IV (Razor): ivField.value (server-rendered): "' + ivField.value + '"');
+            if (!ivField.value && ivValueFromUrl) {
+                // console.log('JS is setting AES IV from URL param as Razor value is empty.');
+                ivField.value = ivValueFromUrl;
+            }
+            // console.log('AES IV (Final): ivField.value after JS logic: "' + ivField.value + '"');
+        } else {
+            console.error('AES IV field (id=iv) not found');
+        }
+    } else {
+        // console.log('URL parameter "iv" not found for AES.');
+        if (ivField && ivField.value !== undefined) ivField.value = '';
+    }
+    
+    if (urlParams.has('cipherText') && urlParams.get('cipherText') &&
+        urlParams.has('key') && urlParams.get('key') &&
+        urlParams.has('iv') && urlParams.get('iv')) {
         
-        if (modalBackdrop) {
-            // Hide the modal immediately
-            modalBackdrop.style.display = 'none';
+        const decryptButton = document.getElementById('decrypt-button');
+        if (decryptButton) {
+            decryptButton.classList.add('animate-pulse', 'bg-green-500', 'ring-2', 'ring-green-300');
             
-            // Restore scrolling on body
+            const parentDiv = decryptButton.parentNode;
+            if (parentDiv && !parentDiv.querySelector('.decrypt-hint-text')) {
+                const hintText = document.createElement('span');
+                hintText.className = 'text-green-400 text-sm block mt-2 text-right decrypt-hint-text';
+                hintText.innerHTML = 'Şifreleme sayfasından aktarılan veriyi çözmek için tıklayın';
+                parentDiv.appendChild(hintText);
+            }
+            
+            setTimeout(() => {
+                decryptButton.classList.remove('animate-pulse');
+            }, 5000);
+        }
+    }
+    
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const resultModal = document.getElementById('result-modal');
+
+    function closeModal() {
+        const mb = document.getElementById('modal-backdrop');
+        if (mb) {
+            mb.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
     }
+
+    if (modalBackdrop) { // If modal HTML exists (i.e., PlainText was present from server)
+        // The modal is shown by default if its HTML is rendered by Razor.
+        // We just need to ensure body scroll is handled and listeners are attached.
+        document.body.style.overflow = 'hidden'; 
+
+        const closeButtons = document.querySelectorAll('#close-modal-btn, #close-modal-btn2');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', closeModal);
+        });
+        
+        modalBackdrop.addEventListener('click', function(e) {
+            if (resultModal && !resultModal.contains(e.target) && e.target === modalBackdrop) {
+                closeModal();
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") {
+                closeModal();
+            }
+        });
+    }
+    
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const textToCopy = this.dataset.text;
+            if (textToCopy === undefined || textToCopy === null) {
+                console.error('No text to copy.');
+                return;
+            }
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalButtonHtml = this.innerHTML;
+                this.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256"><path d="m101.66,141.66,72-72a8,8,0,0,0-11.32-11.32L96,124.69,75.31,104a8,8,0,0,0-11.32,11.32l24,24A8,8,0,0,0,101.66,141.66ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg> Kopyalandı!';
+                this.disabled = true;
+                setTimeout(() => {
+                    this.innerHTML = originalButtonHtml;
+                    this.disabled = false;
+                }, 2000);
+            }).catch(err => {
+                console.error('Kopyalama başarısız oldu: ', err);
+                const originalButtonHtml = this.innerHTML;
+                this.innerHTML = 'Hata!';
+                this.disabled = true;
+                setTimeout(() => {
+                    this.innerHTML = originalButtonHtml;
+                    this.disabled = false;
+                }, 2000);
+            });
+        });
+    });
+});
 </script>

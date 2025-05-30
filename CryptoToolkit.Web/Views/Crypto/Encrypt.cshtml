@@ -9,7 +9,7 @@
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-white text-3xl font-bold mb-2">Metin Şifreleme</h1>
-            <p class="text-[#93acc8] text-lg">AES veya RSA ile verilerinizi güvenle şifreleyin</p>
+            <p class="text-[#93acc8] text-lg">AES ile verilerinizi güvenle şifreleyin</p>
         </div>
 
         <!-- Main Card -->
@@ -44,27 +44,19 @@
                 </div>
             }
 
-            <form asp-action="Encrypt" method="post" class="space-y-6" novalidate>                <!-- Şifreleme Yöntemi -->
-                <div class="mb-6">
+            <form asp-action="Encrypt" method="post" class="space-y-6" novalidate>
+                <!-- Şifreleme Yöntemi - Removed RSA, AES is default -->
+                <input type="hidden" name="method" value="AES" />
+                <div class="mb-6 hidden">
                     <label for="method" class="block text-white text-sm font-medium mb-3">Şifreleme Algoritması</label>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">                        <div>
-                            <input type="radio" class="sr-only" name="method" id="aesMethod" value="AES" checked>
-                            <label class="flex flex-col items-center p-4 border border-[#344b65] rounded-lg cursor-pointer hover:bg-[#243447]/80 transition-colors bg-[#243447]" for="aesMethod">
+                            <input type="radio" class="sr-only" name="method_display" id="aesMethod" value="AES" checked disabled>
+                            <label class="flex flex-col items-center p-4 border border-[#344b65] rounded-lg cursor-not-allowed bg-[#243447]" for="aesMethod">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 256 256" class="mb-2">
                                     <path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,104.62-80,109.18-13.53-4.51-80-30.69-80-109.18V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.68l50.34-50.34a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"></path>
                                 </svg>
                                 <span class="text-white font-medium">AES-256</span>
                                 <span class="text-[#93acc8] text-sm">Simetrik Şifreleme (CBC)</span>
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" class="sr-only" name="method" id="rsaMethod" value="RSA">
-                            <label class="flex flex-col items-center p-4 border border-[#344b65] rounded-lg cursor-pointer hover:bg-[#243447]/80 transition-colors" for="rsaMethod">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 256 256" class="mb-2">
-                                    <path d="M160,16A80.07,80.07,0,0,0,83.91,120.78L26.34,178.34A8,8,0,0,0,24,184v40a8,8,0,0,0,8,8H72a8,8,0,0,0,8-8V208H96a8,8,0,0,0,8-8V184h16a8,8,0,0,0,5.66-2.34l9.56-9.57A80,80,0,1,0,160,16Zm0,144a63.7,63.7,0,0,1-23.65-4.51,8,8,0,0,0-8.84,1.68L116.69,168H96a8,8,0,0,0-8,8v16H72a8,8,0,0,0-8,8v16H40V187.31l58.83-58.82a8,8,0,0,0,1.68-8.84A64,64,0,1,1,160,160Zm32-84a12,12,0,1,1-12-12A12,12,0,0,1,192,76Z"></path>
-                                </svg>
-                                <span class="text-white font-medium">RSA-2048</span>
-                                <span class="text-[#93acc8] text-sm">Asimetrik Şifreleme</span>
                             </label>
                         </div>
                     </div>
@@ -99,57 +91,58 @@
 <!-- Clean, simple modal implementation -->
 @if (Model != null && Model?.CipherText != null)
 {
-    <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-        <div id="result-modal" class="bg-[#1a2532] w-full max-w-4xl rounded-xl shadow-2xl">
-            <!-- Modal Header -->
-            <div class="bg-green-600 px-6 py-4 flex items-center justify-between rounded-t-xl">
-                <h3 class="text-lg font-medium text-white flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M173.66,98.34a8,8,0,0,0-11.32,11.32L172.69,120H128a48,48,0,0,0,0,96h56a8,8,0,0,0,0-16H128a32,32,0,0,1,0-64h44.69l-10.35,10.34a8,8,0,0,0,11.32,11.32l24-24a8,8,0,0,0,0-11.32ZM184,40H72A16,16,0,0,0,56,56V200a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V56A16,16,0,0,0,184,40Zm0,160H72V56H184V200Z"></path>
-                    </svg>
-                    Şifreleme Başarılı
-                </h3>
-                <button id="close-modal-btn" class="text-white hover:text-gray-300 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            
-            <!-- Modal Content -->
-            <div class="p-6 text-white max-h-[calc(100vh-200px)] overflow-y-auto">
-                <div class="bg-blue-900/30 border border-blue-700/50 text-blue-100 px-4 py-3 rounded-lg mb-6">
-                    <div class="flex items-start gap-2">
-                        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,136,176Zm-16-56a12,12,0,1,1,12-12A12,12,0,0,1,120,120Z"></path>
+    var aesModel = Model as CryptoToolkit.Web.Models.AesModel;
+    if (aesModel != null)
+    {
+        <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div id="result-modal" class="bg-[#1a2532] w-full max-w-4xl rounded-xl shadow-2xl">
+                <!-- Modal Header -->
+                <div class="bg-green-600 px-6 py-4 flex items-center justify-between rounded-t-xl">
+                    <h3 class="text-lg font-medium text-white flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M173.66,98.34a8,8,0,0,0-11.32,11.32L172.69,120H128a48,48,0,0,0,0,96h56a8,8,0,0,0,0-16H128a32,32,0,0,1,0-64h44.69l-10.35,10.34a8,8,0,0,0,11.32,11.32l24-24a8,8,0,0,0,0-11.32ZM184,40H72A16,16,0,0,0,56,56V200a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V56A16,16,0,0,0,184,40Zm0,160H72V56H184V200Z"></path>
                         </svg>
-                        <span><strong>Önemli:</strong> Şifreli metin ve anahtarları güvenli bir şekilde saklayın. Anahtarlar olmadan verilerinizi geri döndüremezsiniz.</span>
-                    </div>
+                        Şifreleme Başarılı
+                    </h3>
+                    <button id="close-modal-btn" class="text-white hover:text-gray-300 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </div>
-
-                <!-- Encrypted Text -->
-                <div class="mb-6">
-                    <div class="flex items-center gap-2 mb-3 text-blue-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,104.62-80,109.18-13.53-4.51-80-30.69-80-109.18V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"></path>
-                        </svg>
-                        <h5 class="text-white font-medium">Şifreli Metin</h5>
-                    </div>
-                    <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65]">
-                        <code class="text-white text-sm break-all">@Model?.CipherText</code>
-                        <button class="absolute top-2 right-2 bg-blue-600/90 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
-                                data-text="@Model?.CipherText?.Replace("'", "\\'")">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
-                                <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
+                
+                <!-- Modal Content -->
+                <div class="p-6 text-white max-h-[calc(100vh-200px)] overflow-y-auto">
+                    <div class="bg-blue-900/30 border border-blue-700/50 text-blue-100 px-4 py-3 rounded-lg mb-6">
+                        <div class="flex items-start gap-2">
+                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176Zm-16-56a12,12,0,1,1,12-12A12,12,0,0,1,128,120Z"></path>
                             </svg>
-                            Kopyala
-                        </button>
+                            <span><strong>Önemli:</strong> Şifreli metin ve anahtarları güvenli bir şekilde saklayın. Anahtarlar olmadan verilerinizi geri döndüremezsiniz.</span>
+                        </div>
                     </div>
-                </div>
 
-                <!-- AES Model Content -->
-                @if (Model is CryptoToolkit.Web.Models.AesModel aesModel)
-                {
+                    <!-- Encrypted Text -->
+                    <div class="mb-6">
+                        <div class="flex items-center gap-2 mb-3 text-blue-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,104.62-80,109.18-13.53-4.51-80-30.69-80-109.18V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"></path>
+                            </svg>
+                            <h5 class="text-white font-medium">Şifreli Metin</h5>
+                        </div>
+                        <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65]">
+                            <code class="text-white text-sm break-all">@Model?.CipherText</code>
+                            <button class="absolute top-2 right-2 bg-blue-600/90 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
+                                    data-text="@Model?.CipherText?.Replace("'", "\\'")">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
+                                </svg>
+                                Kopyala
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- AES Model Content -->
                     <div class="mb-6">
                         <div class="flex items-center gap-2 mb-3 text-white">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
@@ -160,7 +153,7 @@
                         <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65] mb-2">
                             <code class="text-white text-sm break-all">@aesModel.Key</code>
                             <button class="absolute top-2 right-2 bg-yellow-600/90 hover:bg-yellow-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
-                                    data-text="@(aesModel.Key?.Replace("'", "\\'") ?? "")">
+                                    data-text="@(aesModel.Key?.Replace("\'", "\\\\\'") ?? "")">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
                                     <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
                                 </svg>
@@ -184,7 +177,7 @@
                         <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65] mb-2">
                             <code class="text-cyan-400 text-sm break-all">@aesModel.IV</code>
                             <button class="absolute top-2 right-2 bg-cyan-600/90 hover:bg-cyan-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
-                                    data-text="@(aesModel.IV?.Replace("'", "\\'") ?? "")">
+                                    data-text="@(aesModel.IV?.Replace("\'", "\\\\\'") ?? "")">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
                                     <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
                                 </svg>
@@ -198,173 +191,31 @@
                             Bu IV'yi güvenli bir yerde saklayın!
                         </div>
                     </div>
-                }
-                <!-- RSA Model Content -->
-                @if (Model is CryptoToolkit.Web.Models.RsaModel rsaModel)
-                {
-                    <div class="mb-6">
-                        <div class="flex items-center gap-2 mb-3 text-green-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                                <path d="M160,16A80.07,80.07,0,0,0,83.91,120.78L26.34,178.34A8,8,0,0,0,24,184v40a8,8,0,0,0,8,8H72a8,8,0,0,0,8-8V208H96a8,8,0,0,0,8-8V184h16a8,8,0,0,0,5.66-2.34l9.56-9.57A80,80,0,1,0,160,16Zm0,144a63.7,63.7,0,0,1-23.65-4.51,8,8,0,0,0-8.84,1.68L116.69,168H96a8,8,0,0,0-8,8v16H72a8,8,0,0,0-8,8v16H40V187.31l58.83-58.82a8,8,0,0,0,1.68-8.84A64,64,0,1,1,160,160Zm32-84a12,12,0,1,1-12-12A12,12,0,0,1,192,76Z"></path>
-                            </svg>
-                            <h5 class="text-white font-medium">Açık Anahtar (RSA)</h5>
-                        </div>
-                        <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65]">
-                            <code class="text-green-400 text-sm break-all">@(rsaModel.PublicKey ?? "")</code>
-                            <button class="absolute top-2 right-2 bg-green-600/90 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
-                                    data-text="@(rsaModel.PublicKey?.Replace("'", "\\'") ?? "")">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
-                                </svg>
-                                Kopyala
-                            </button>
-                        </div>
-                    </div>
-                    <div class="mb-6">
-                        <div class="flex items-center gap-2 mb-3 text-red-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                                <path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,104.62-80,109.18-13.53-4.51-80-30.69-80-109.18V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"></path>
-                            </svg>
-                            <h5 class="text-white font-medium">Özel Anahtar (RSA)</h5>
-                        </div>
-                        <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65] mb-2">
-                            <code class="text-red-400 text-sm break-all">@(rsaModel.PrivateKey ?? "")</code>
-                            <button class="absolute top-2 right-2 bg-red-600/90 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
-                                    data-text="@(rsaModel.PrivateKey?.Replace("'", "\\'") ?? "")">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
-                                </svg>
-                                Kopyala
-                            </button>
-                        </div>
-                        <div class="bg-red-900/50 border border-red-700/50 text-red-100 px-3 py-2 rounded text-sm flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
-                                <path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"></path>
-                            </svg>
-                            Bu özel anahtarı asla başkalarıyla paylaşmayın!
-                        </div>
-                    </div>
-                }
-            </div>
-            
-            <!-- Modal Footer -->
-            <div class="p-6 bg-[#243447] border-t border-[#344b65] flex items-center justify-between rounded-b-xl">
-                <a asp-controller="Crypto" asp-action="Decrypt" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M224,176a8,8,0,0,1-8,8H136v40a8,8,0,0,1-13.66,5.66l-72-72a8,8,0,0,1,0-11.32l72-72A8,8,0,0,1,136,80v40h80A8,8,0,0,1,224,128Z"></path>
-                    </svg>
-                    Şifre Çözme Sayfasına Git
-                </a>
-                <button type="button" id="close-modal-btn2" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
-                    </svg>
-                    Kapat
-                </button>
+                </div>
+                  <!-- Modal Footer -->
+                <div class="p-6 bg-[#243447] border-t border-[#344b65] flex items-center justify-between rounded-b-xl">
+                    @{
+                        // aesModel is guaranteed to be non-null here by the surrounding if block
+                        var encryptedText = aesModel.CipherText ?? ""; // CipherText comes from Model, which could be dynamic, but aesModel itself is typed
+                        var key = aesModel.Key ?? "";
+                        var iv = aesModel.IV ?? "";
+                        var aesUrl = $"/Crypto/Decrypt?cipherText={Uri.EscapeDataString(encryptedText)}&key={Uri.EscapeDataString(key)}&iv={Uri.EscapeDataString(iv)}&method=AES"; // Added method=AES for clarity on Decrypt
+                    }
+                    <a href="@aesUrl"
+                       class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M224,176a8,8,0,0,1-8,8H136v40a8,8,0,0,1-13.66,5.66l-72-72a8,8,0,0,1,0-11.32l72-72A8,8,0,0,1,136,80v40h80A8,8,0,0,1,224,128Z"></path>
+                        </svg>
+                        Şifre Çözme Sayfasına Git
+                    </a>
+                    <button type="button" id="close-modal-btn2" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
+                        </svg>
+                        Kapat
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-}
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Modal functionality
-        const modalBackdrop = document.getElementById('modal-backdrop');
-        
-        if (modalBackdrop) {
-            // Prevent scrolling on body when modal is open
-            document.body.style.overflow = 'hidden';
-            
-            // Handle close buttons
-            const closeButtons = document.querySelectorAll('#close-modal-btn, #close-modal-btn2');
-            closeButtons.forEach(button => {
-                button.addEventListener('click', closeModal);
-            });
-            
-            // Close modal when clicking on backdrop
-            modalBackdrop.addEventListener('click', function(e) {
-                if (e.target === modalBackdrop) {
-                    closeModal();
-                }
-            });
-            
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
-            });
-        }
-        
-        // Handle copy buttons
-        const copyButtons = document.querySelectorAll('.copy-btn');
-        copyButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const text = this.dataset.text;
-                if (!text) return;
-                
-                navigator.clipboard.writeText(text).then(() => {
-                    const originalHTML = this.innerHTML;
-                    const originalClass = this.className;
-                    
-                    // Change to copied state
-                    this.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M104,192a8.5,8.5,0,0,1-5.66-2.34l-56-56a8,8,0,0,1,11.32-11.32L104,172.69l98.34-98.35a8,8,0,0,1,11.32,11.32l-104,104A8.5,8.5,0,0,1,104,192Z"></path>
-                        </svg>
-                        Kopyalandı!
-                    `;
-                    this.className = this.className.replace(/bg-\w+-600\/90|bg-\w+-600/g, 'bg-green-600');
-                    
-                    // Restore original state after delay
-                    setTimeout(() => {
-                        this.innerHTML = originalHTML;
-                        this.className = originalClass;
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Kopyalama hatası:', err);
-                    alert('Kopyalama işlemi başarısız oldu.');
-                });
-            });
-        });
-        
-        // Radio button selection enhancement
-        const aesRadio = document.getElementById('aesMethod');
-        const rsaRadio = document.getElementById('rsaMethod');
-        
-        if (aesRadio && rsaRadio) {
-            const aesLabel = document.querySelector('label[for="aesMethod"]');
-            const rsaLabel = document.querySelector('label[for="rsaMethod"]');
-            
-            function updateStyles() {
-                if (aesRadio.checked) {
-                    aesLabel.classList.add('bg-[#243447]', 'border-blue-500');
-                    rsaLabel.classList.remove('bg-[#243447]', 'border-blue-500');
-                } else {
-                    rsaLabel.classList.add('bg-[#243447]', 'border-blue-500');
-                    aesLabel.classList.remove('bg-[#243447]');
-                    aesLabel.classList.remove('border-blue-500');
-                }
-            }
-            
-            // Set initial styles
-            updateStyles();
-            
-            // Update styles when selection changes
-            aesRadio.addEventListener('change', updateStyles);
-            rsaRadio.addEventListener('change', updateStyles);        }
-    });
-    
-    // Function to close the modal
-    function closeModal() {
-        const modalBackdrop = document.getElementById('modal-backdrop');
-        
-        if (modalBackdrop) {
-            // Hide the modal immediately
-            modalBackdrop.style.display = 'none';
-            
-            // Restore scrolling on body
-            document.body.style.overflow = 'auto';
-        }
     }
-</script>
+}
