@@ -24,28 +24,9 @@
                     <h2 class="text-white text-xl font-bold">Şifreleme</h2>
                     <p class="text-[#93acc8]">Metninizi şifreleyerek koruyun</p>
                 </div>
-            </div>            @if (!ViewData.ModelState.IsValid)
-            {
-                <div class="bg-red-900/50 border border-red-700/50 text-red-100 px-4 py-3 rounded-lg mb-6">
-                    <div class="flex items-start gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="flex-shrink-0 mt-0.5" viewBox="0 0 256 256">
-                            <path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"></path>
-                        </svg>
-                        <div>
-                            <h4 class="font-medium mb-1">Lütfen aşağıdaki hataları düzeltin:</h4>
-                            <ul class="list-disc list-inside space-y-1">
-                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                                {
-                                    <li>@error.ErrorMessage</li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            <form asp-action="Encrypt" method="post" class="space-y-6" novalidate>
-                <!-- Şifreleme Yöntemi - Removed RSA, AES is default -->
+            </div>
+            <form asp-action="Encrypt" method="post" class="space-y-6">
+                
                 <input type="hidden" name="method" value="AES" />
                 <div class="mb-6 hidden">
                     <label for="method" class="block text-white text-sm font-medium mb-3">Şifreleme Algoritması</label>
@@ -60,7 +41,7 @@
                             </label>
                         </div>
                     </div>
-                </div><!-- Şifrelenecek Metin -->
+                </div>
                 <div class="mb-6">
                     <label for="plainText" class="block text-white text-sm font-medium mb-3">Şifrelenecek Metin</label>
                     <div class="relative">
@@ -88,7 +69,6 @@
         </div>    </div>
 </div>
 
-<!-- Clean, simple modal implementation -->
 @if (Model != null && Model?.CipherText != null)
 {
     var aesModel = Model as CryptoToolkit.Web.Models.AesModel;
@@ -111,7 +91,7 @@
                     </button>
                 </div>
                 
-                <!-- Modal Content -->
+               <!-- Modal Content -->
                 <div class="p-6 text-white max-h-[calc(100vh-200px)] overflow-y-auto">
                     <div class="bg-blue-900/30 border border-blue-700/50 text-blue-100 px-4 py-3 rounded-lg mb-6">
                         <div class="flex items-start gap-2">
@@ -153,7 +133,7 @@
                         <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65] mb-2">
                             <code class="text-white text-sm break-all">@aesModel.Key</code>
                             <button class="absolute top-2 right-2 bg-yellow-600/90 hover:bg-yellow-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
-                                    data-text="@(aesModel.Key?.Replace("\'", "\\\\\'") ?? "")">
+                                    data-text="@(aesModel.Key?.Replace("'", "\\'") ?? "")">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
                                     <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
                                 </svg>
@@ -177,7 +157,7 @@
                         <div class="relative bg-[#243447] p-4 rounded-lg border border-[#344b65] mb-2">
                             <code class="text-cyan-400 text-sm break-all">@aesModel.IV</code>
                             <button class="absolute top-2 right-2 bg-cyan-600/90 hover:bg-cyan-700 text-white px-3 py-1 rounded text-sm transition-colors flex items-center gap-1 copy-btn" 
-                                    data-text="@(aesModel.IV?.Replace("\'", "\\\\\'") ?? "")">
+                                    data-text="@(aesModel.IV?.Replace("'", "\\'") ?? "")">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 256 256">
                                     <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
                                 </svg>
@@ -195,8 +175,8 @@
                   <!-- Modal Footer -->
                 <div class="p-6 bg-[#243447] border-t border-[#344b65] flex items-center justify-between rounded-b-xl">
                     @{
-                        // aesModel is guaranteed to be non-null here by the surrounding if block
-                        var encryptedText = aesModel.CipherText ?? ""; // CipherText comes from Model, which could be dynamic, but aesModel itself is typed
+                        
+                        var encryptedText = aesModel.CipherText ?? ""; 
                         var key = aesModel.Key ?? "";
                         var iv = aesModel.IV ?? "";
                         var aesUrl = $"/Crypto/Decrypt?cipherText={Uri.EscapeDataString(encryptedText)}&key={Uri.EscapeDataString(key)}&iv={Uri.EscapeDataString(iv)}&method=AES"; // Added method=AES for clarity on Decrypt
@@ -218,4 +198,54 @@
             </div>
         </div>
     }
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            
+            
+            if (modalBackdrop) {
+                const closeModalButton = document.getElementById('close-modal-btn');
+                const closeModalButton2 = document.getElementById('close-modal-btn2');
+
+                function hideModal() {
+                    modalBackdrop.style.display = 'none';
+                }
+
+                if (closeModalButton) {
+                    closeModalButton.addEventListener('click', hideModal);
+                }
+                if (closeModalButton2) {
+                    closeModalButton2.addEventListener('click', hideModal);
+                }
+
+                
+                
+                
+                const copyButtons = modalBackdrop.querySelectorAll('.copy-btn');
+                copyButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        if (typeof copyToClipboard === 'function') {
+                            copyToClipboard(this, this.dataset.text);
+                        } else {
+                            console.error('copyToClipboard function not found in site.js. Using fallback.');
+                            navigator.clipboard.writeText(this.dataset.text).then(
+                                function() { 
+                                    
+                                    if(typeof showToast === 'function') showToast('Panoya kopyalandı!');
+                                    else alert('Panoya kopyalandı!');
+                                }, 
+                                function() { 
+                                    if(typeof showToast === 'function') showToast('Kopyalama başarısız oldu!', true);
+                                    else alert('Kopyalama başarısız oldu!');
+                                }
+                            );
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 }
