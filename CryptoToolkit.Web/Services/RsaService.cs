@@ -33,8 +33,7 @@ namespace CryptoToolkit.Web.Services
                 rsa.ImportRSAPublicKey(Convert.FromBase64String(publicKey), out _);
                 var bytes = Encoding.UTF8.GetBytes(plainText);
                 
-                // RSA şifreleme boyut sınırlamasını kontrol edin
-                int maxDataLength = (KeySize / 8) - 42; // PKCS#1 padding için gereken alan çıkarılır
+                int maxDataLength = (KeySize / 8) - 42;
                 if (bytes.Length > maxDataLength)
                 {
                     throw new ArgumentException($"Metin çok uzun. En fazla {maxDataLength} bayt şifrelenebilir.");

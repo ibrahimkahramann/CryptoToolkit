@@ -17,38 +17,37 @@ namespace CryptoToolkit.Web.Controllers
 
         [HttpGet]
         public IActionResult Encrypt() => View();        [HttpPost]
-        public IActionResult Encrypt(string plainText) // Removed method parameter
+        public IActionResult Encrypt(string plainText)
         {
             if (string.IsNullOrEmpty(plainText))
             {
-                ModelState.AddModelError("", "Metin alanı zorunludur."); // Simplified error message
+                ModelState.AddModelError("", "Metin alanı zorunludur.");
                 return View();
             }
             
             try
             {
-                // Always use AES
                 var (cipherText, key, iv) = _aesService.Encrypt(plainText);
                 return View(new AesModel { PlainText = plainText, CipherText = cipherText, Key = key, IV = iv });
             }
             catch (ArgumentException ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                System.Diagnostics.Debug.WriteLine($"ArgumentException in Encrypt: {ex.Message}"); 
+                ModelState.AddModelError("", "Şifreleme sırasında geçersiz bir parametre girildi. Lütfen girdilerinizi kontrol edin.");
                 return View();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Şifreleme sırasında bir hata oluştu. Lütfen tekrar deneyin.");
+                System.Diagnostics.Debug.WriteLine($"Exception in Encrypt: {ex.Message}");
+                ModelState.AddModelError("", "Şifreleme sırasında beklenmedik bir hata oluştu. Lütfen tekrar deneyin.");
                 return View();
             }
         }
         [HttpGet]
         public IActionResult Decrypt(string cipherText, string key, string iv) // Removed privateKey parameter
         {
-            // Log parameter values to debug
             System.Diagnostics.Debug.WriteLine($"GET Decrypt - Parameters: cipherText={cipherText?.Length ?? 0}, key={key?.Length ?? 0}, iv={iv?.Length ?? 0}");
             
-            // Pass the parameters to the view, so they can be pre-filled in the form
             var model = new AesModel
             {
                 CipherText = cipherText,
@@ -59,46 +58,44 @@ namespace CryptoToolkit.Web.Controllers
         }
 
         [HttpPost]
-        // To avoid overload conflict and to better suit form submissions, use a model parameter.
-        // The form in Decrypt.cshtml should have its inputs named to match AesModel properties (CipherText, Key, IV).
         public IActionResult Decrypt(AesModel model) 
         {
-            // The 'method' parameter is no longer needed as we are AES-only.
-            // Ensure CipherText, Key, and IV are part of the AesModel and are bound from the form.
             if (string.IsNullOrEmpty(model.CipherText))
             {
                 ModelState.AddModelError("", "Şifreli metin alanı zorunludur.");
-                return View(model); // Pass the model back to retain user input
+                return View(model); 
             }
-            
+
             try
             {
-                // Always use AES
+
                 if (string.IsNullOrEmpty(model.Key) || string.IsNullOrEmpty(model.IV))
                 {
                     ModelState.AddModelError("", "AES şifre çözme için anahtar ve IV değerleri gereklidir.");
-                    return View(model); // Pass the model back
+                    return View(model);
                 }
-                
+
                 var plainText = _aesService.Decrypt(model.CipherText, model.Key, model.IV);
-                // Update the model with the decrypted plainText to display it.
                 model.PlainText = plainText;
-                return View(model); // Return view with the model containing plainText and original inputs
+                return View(model);
             }
             catch (ArgumentException ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                System.Diagnostics.Debug.WriteLine($"ArgumentException in Decrypt: {ex.Message}");
+                ModelState.AddModelError("", "Şifre çözme sırasında geçersiz bir parametre girildi. Anahtar, IV veya şifreli metin formatını kontrol edin.");
                 return View(model);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                ModelState.AddModelError("", "Şifre çözme sırasında bir hata oluştu. Lütfen doğru anahtar kullandığınızdan emin olun.");
+                System.Diagnostics.Debug.WriteLine($"Exception in Decrypt: {ex.Message}");
+                ModelState.AddModelError("", "Şifre çözme sırasında beklenmedik bir hata oluştu. Lütfen doğru anahtar ve IV kullandığınızdan emin olun.");
                 return View(model);
             }
         }
 
         [HttpGet]
-        public IActionResult Hash() => View();        [HttpPost]
+        public IActionResult Hash() => View();
+        [HttpPost]
         public async Task<IActionResult> Hash(string inputText, Microsoft.AspNetCore.Http.IFormFile uploadedFile)
         {
             try
@@ -110,8 +107,6 @@ namespace CryptoToolkit.Web.Controllers
                 }
                 else if (uploadedFile != null && uploadedFile.Length > 0)
                 {
-                    // Dosya boyutu kontrolü - çok büyük dosyalar için bellek kullanımını sınırlayalım
-                    // 10 MB üzeri dosyalar için uyarı verelim
                     if (uploadedFile.Length > 10 * 1024 * 1024)
                     {
                         ModelState.AddModelError("", "Dosya boyutu çok büyük (10MB'dan büyük). Daha küçük bir dosya seçin.");
@@ -131,7 +126,8 @@ namespace CryptoToolkit.Web.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Özet hesaplama sırasında bir hata oluştu: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Exception in Hash: {ex.Message}");
+                ModelState.AddModelError("", $"Özet hesaplama sırasında beklenmedik bir hata oluştu. Lütfen tekrar deneyin.");
                 return View();
             }
         }

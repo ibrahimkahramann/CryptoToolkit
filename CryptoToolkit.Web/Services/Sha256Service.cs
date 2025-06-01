@@ -30,12 +30,6 @@ namespace CryptoToolkit.Web.Services
             return BitConverter.ToString(hash).Replace("-", string.Empty);
         }
         
-        /// <summary>
-        /// Dosya yolundan doğrudan SHA-256 özeti hesaplar.
-        /// Büyük dosyalar için daha etkilidir çünkü tüm dosyayı belleğe yüklemez.
-        /// </summary>
-        /// <param name="filePath">Özeti hesaplanacak dosyanın yolu</param>
-        /// <returns>SHA-256 özeti (hex formatında)</returns>
         public string ComputeHashFromFile(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))

@@ -24,6 +24,7 @@
                     <p class="text-gray-400">Şifreli metinleri çözün</p>
                 </div>
             </div>            <!-- Error Display -->
+            @* <!-- Error Display -->
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="bg-red-500/10 border border-red-500 rounded-lg p-4 mb-6">
@@ -33,7 +34,8 @@
                             <li>@error.ErrorMessage</li>
                         }
                     </ul>
-                </div>            }
+                </div>
+            } *@
 
             <!-- Data Transfer Notification -->
             @if (!string.IsNullOrEmpty(Context.Request.Query["cipherText"]))
@@ -53,11 +55,13 @@
                 <!-- Algorithm Selection - REMOVED -->
                 <!-- Encrypted Text -->                <div>
                     <label for="cipherText" class="block text-sm font-medium text-gray-300 mb-2">Şifreli Metin</label>
-                    <div class="relative">                        <textarea class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none resize-none" 
+                    <div class="relative">
+                        <textarea class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none resize-none" 
                                 id="cipherText" name="cipherText" rows="4" 
                                 placeholder="Çözmek istediğiniz şifreli metni buraya yapıştırın..." required>@(Context.Request.Query["cipherText"].Count > 0 ? Uri.UnescapeDataString(Context.Request.Query["cipherText"].ToString()) : "")</textarea>
                     </div>
-                </div><!-- AES Fields -->
+                </div>
+                <!-- AES Fields -->
                 <div id="aesFields" class="space-y-4"> <!-- Ensure this is always visible, no 'hidden' class -->
                     <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
                         <h3 class="text-lg font-medium text-yellow-400 mb-4 flex items-center">
@@ -72,14 +76,14 @@
                                 <input type="text" id="key" name="key"
                                        class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none"
                                        value="@(Context.Request.Query["key"].Count > 0 ? Uri.UnescapeDataString(Context.Request.Query["key"].ToString()) : "")"
-                                       placeholder="AES Anahtarını buraya girin..." />
+                                       placeholder="AES Anahtarını buraya girin..." required />
                             </div>
                             <div>
                                 <label for="iv" class="block text-sm font-medium text-gray-300 mb-2">Başlatma Vektörü (IV)</label>
                                 <input type="text" id="iv" name="iv"
                                        class="w-full bg-[#243447] border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:border-blue-400 focus:outline-none"
                                        value="@(Context.Request.Query["iv"].Count > 0 ? Uri.UnescapeDataString(Context.Request.Query["iv"].ToString()) : "")"
-                                       placeholder="Başlatma Vektörünü (IV) buraya girin..." />
+                                       placeholder="Başlatma Vektörünü (IV) buraya girin..." required />
                             </div>
                         </div>
                     </div>
@@ -197,26 +201,20 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('AES key field (id=key) not found');
         }
     } else {
-        // console.log('URL parameter "key" not found for AES.');
         if (keyField && keyField.value !== undefined) keyField.value = ''; 
     }
 
     const ivField = document.getElementById('iv');
     if (urlParams.has('iv')) {
         const ivValueFromUrl = decodeURIComponent(urlParams.get('iv') || '');
-        // console.log('URL parameter "iv" for AES: "' + ivValueFromUrl + '"');
         if (ivField) {
-            // console.log('AES IV (Razor): ivField.value (server-rendered): "' + ivField.value + '"');
             if (!ivField.value && ivValueFromUrl) {
-                // console.log('JS is setting AES IV from URL param as Razor value is empty.');
                 ivField.value = ivValueFromUrl;
             }
-            // console.log('AES IV (Final): ivField.value after JS logic: "' + ivField.value + '"');
         } else {
             console.error('AES IV field (id=iv) not found');
         }
     } else {
-        // console.log('URL parameter "iv" not found for AES.');
         if (ivField && ivField.value !== undefined) ivField.value = '';
     }
     
@@ -253,9 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    if (modalBackdrop) { // If modal HTML exists (i.e., PlainText was present from server)
-        // The modal is shown by default if its HTML is rendered by Razor.
-        // We just need to ensure body scroll is handled and listeners are attached.
+    if (modalBackdrop) { 
         document.body.style.overflow = 'hidden'; 
 
         const closeButtons = document.querySelectorAll('#close-modal-btn, #close-modal-btn2');

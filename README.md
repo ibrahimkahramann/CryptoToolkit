@@ -1,92 +1,99 @@
 # CryptoToolkit
 
-A comprehensive toolkit for cryptographic operations and cryptocurrency utilities. This toolkit provides a collection of tools and utilities for developers and users working with cryptocurrencies and cryptography.
+CryptoToolkit is an ASP.NET Core MVC web application that provides a set of tools for common cryptographic operations, including AES encryption/decryption and SHA256 hashing.
 
 ## Features
 
-- **Encryption/Decryption Tools**: Secure your data with various encryption algorithms
-- **Hash Functions**: Generate and verify hash values using different hashing algorithms
-- **Cryptocurrency Wallets**: Create and manage cryptocurrency wallets
-- **Blockchain Utilities**: Interact with various blockchain networks
-- **Key Management**: Generate and manage cryptographic keys
-- **Digital Signatures**: Create and verify digital signatures
-- **Secure Random Number Generation**: Generate cryptographically secure random numbers
+*   **AES Encryption**: Encrypts plaintext using AES (Advanced Encryption Standard). It generates a ciphertext, a unique key, and an initialization vector (IV).
+*   **AES Decryption**: Decrypts ciphertext back to plaintext using the corresponding key and IV.
+*   **SHA256 Hashing**: Computes the SHA256 hash for a given text input or an uploaded file.
 
-## Installation
+## Technologies Used
 
-```bash
-# Clone the repository
-git clone https://github.com/ibrahimkahramann/CryptoToolkit.git
+*   **Backend**: ASP.NET Core MVC, C# (.NET 7)
+*   **Frontend**: HTML, CSS, JavaScript
+*   **Styling**: Bootstrap
+*   **Client-side Scripting**: jQuery
 
-# Navigate to the project directory
-cd CryptoToolkit
+## Setup and Installation
 
-# Install dependencies
-npm install  # or pip install -r requirements.txt for Python
-```
+To run this project locally, you'll need the .NET 7 SDK installed.
+
+1.  **Clone the repository (if applicable) or download the source code.**
+    ```bash
+    # If you have it in a git repository
+    # git clone <repository-url>
+    # cd CryptoToolkit
+    ```
+
+2.  **Navigate to the web project directory:**
+    ```bash
+    cd CryptoToolkit.Web
+    ```
+
+3.  **Build the project:**
+    ```bash
+    dotnet build
+    ```
+
+4.  **Run the project:**
+    ```bash
+    dotnet run
+    ```
+    The application will typically be available at `https://localhost:xxxx` or `http://localhost:xxxx`, where `xxxx` is a port number assigned by Kestrel. Check the console output for the exact URL.
 
 ## Usage
 
-### Basic Encryption Example
+Once the application is running, you can access the different tools via the navigation bar or by directly visiting their URLs:
 
-```javascript
-const { encrypt, decrypt } = require('./crypto-toolkit');
+*   ### Encrypt (`/Crypto/Encrypt`)
+    1.  Navigate to the "Encrypt" page.
+    2.  Enter the plaintext you want to encrypt in the text area.
+    3.  Click the "Encrypt" button.
+    4.  The application will display the generated Ciphertext, AES Key, and AES IV.
+    5.  You can copy these values or use the "Go to Decrypt page" button, which will take you to the Decrypt page with these values pre-filled.
 
-// Encrypt data
-const encrypted = encrypt('Your sensitive data', 'your-secret-key');
-console.log('Encrypted:', encrypted);
+*   ### Decrypt (`/Crypto/Decrypt`)
+    1.  Navigate to the "Decrypt" page.
+    2.  If you came from the Encrypt page, the Ciphertext, Key, and IV fields might be pre-filled. Otherwise, enter the Ciphertext, the AES Key, and the AES IV.
+    3.  Click the "Decrypt" button.
+    4.  The application will display the original plaintext.
 
-// Decrypt data
-const decrypted = decrypt(encrypted, 'your-secret-key');
-console.log('Decrypted:', decrypted);
-```
+*   ### Hash (`/Crypto/Hash`)
+    1.  Navigate to the "Hash" page.
+    2.  You can either:
+        *   Enter text directly into the text area.
+        *   Upload a file using the file input.
+    3.  Click the "Compute Hash" button.
+    4.  The application will display the SHA256 hash of the input text or file.
 
-### Cryptocurrency Wallet Example
+## Project Structure
 
-```javascript
-const { createWallet } = require('./crypto-toolkit');
+The main components of the project are organized as follows:
 
-// Create a new wallet
-const wallet = createWallet('BTC');
-console.log('New Bitcoin wallet created:');
-console.log('Address:', wallet.address);
-console.log('Private Key:', wallet.privateKey);
-```
-
-## API Documentation
-
-For detailed API documentation, please refer to the [API Documentation](docs/API.md) file.
-
-## Requirements
-
-- Node.js v14+ or Python 3.8+ (depending on implementation)
-- OpenSSL
-- Additional dependencies listed in package.json/requirements.txt
+*   `CryptoToolkit.sln`: Visual Studio solution file.
+*   `CryptoToolkit.Web/`: The ASP.NET Core MVC web application.
+    *   `Controllers/`: Contains C# controller classes that handle HTTP requests and orchestrate responses.
+        *   `CryptoController.cs`: Handles all cryptographic operations (encryption, decryption, hashing).
+        *   `HomeController.cs`: Handles basic home page requests.
+    *   `Models/`: Defines C# classes for data representation (view models).
+        *   `AesModel.cs`: Model for AES encryption/decryption data.
+        *   `Sha256Model.cs`: Model for SHA256 hashing data.
+        *   `FileUploadModel.cs`: Model for file uploads in hashing.
+    *   `Services/`: Contains C# service classes that encapsulate the core logic for cryptographic operations.
+        *   `AesService.cs`: Implements AES encryption and decryption.
+        *   `Sha256Service.cs`: Implements SHA256 hashing.
+    *   `Views/`: Contains Razor (.cshtml) files for rendering the user interface.
+        *   `Crypto/`: Views related to cryptographic tools (`Encrypt.cshtml`, `Decrypt.cshtml`, `Hash.cshtml`).
+        *   `Shared/`: Shared layout files and partial views.
+    *   `wwwroot/`: Contains static web assets like CSS, JavaScript, and libraries (Bootstrap, jQuery).
+    *   `Program.cs`: The main entry point for the application, where services are configured and the HTTP request pipeline is set up.
+    *   `appsettings.json`: Configuration file for the application.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Contributions are welcome! If you have suggestions for improvements or find any issues, please feel free to open an issue or submit a pull request (if this were a public repository).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Security
-
-If you discover a security vulnerability within CryptoToolkit, please send an email to Ibrahim Kahraman. All security vulnerabilities will be promptly addressed.
-
-## Acknowledgments
-
-- List any libraries or tools that inspired this project
-- Credits to cryptographic algorithms and implementations used
-- Community contributors
-
-## Disclaimer
-
-This toolkit is provided for educational and development purposes only. Users are responsible for ensuring compliance with relevant laws and regulations when using cryptographic tools and handling cryptocurrencies.
+This project is currently not under a specific license. Please refer to the `LICENSE` file if one is added in the future.

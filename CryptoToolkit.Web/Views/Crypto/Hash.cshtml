@@ -23,7 +23,7 @@
                     <h2 class="text-xl font-semibold">SHA256 Özeti</h2>
                     <p class="text-gray-400">Veri bütünlüğünü doğrulayın</p>
                 </div>
-            </div>            <!-- Error Display -->
+            </div>            @* <!-- Error Display -->
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="bg-red-500/10 border border-red-500 rounded-lg p-4 mb-6">
@@ -34,7 +34,7 @@
                         }
                     </ul>
                 </div>
-            }
+            } *@
 
             <form asp-action="Hash" method="post" enctype="multipart/form-data" class="space-y-6">
                 <!-- Tab Navigation -->
@@ -197,6 +197,30 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Add required attribute dynamically to prevent validation on hidden fields
+        const form = document.querySelector('form[asp-action="Hash"]');
+        const inputText = document.getElementById('inputText');
+        const uploadedFile = document.getElementById('uploadedFile');
+
+        // Set initial required state based on active tab
+        if (document.getElementById('text-content').classList.contains('hidden')) {
+            uploadedFile.required = true;
+            inputText.required = false;
+        } else {
+            inputText.required = true;
+            uploadedFile.required = false;
+        }
+
+        document.getElementById('text-tab').addEventListener('click', function() {
+            inputText.required = true;
+            uploadedFile.required = false;
+        });
+
+        document.getElementById('file-tab').addEventListener('click', function() {
+            uploadedFile.required = true;
+            inputText.required = false;
+        });
+        
         // Modal functionality
         const modalBackdrop = document.getElementById('modal-backdrop');
         
