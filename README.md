@@ -25,14 +25,14 @@ CryptoToolkit is an ASP.NET Core MVC web application that provides a set of tool
 
 ## Technologies Used
 
-*   **Backend**: ASP.NET Core MVC, C# (.NET 7)
+*   **Backend**: ASP.NET Core MVC, C# (.NET 9)
 *   **Frontend**: HTML, CSS, JavaScript
 *   **Styling**: Bootstrap
 *   **Client-side Scripting**: jQuery
 
 ## Setup and Installation
 
-To run this project locally, you'll need the .NET 7 SDK installed.
+To run this project locally, you'll need the .NET 9 SDK installed.
 
 1.  **Clone the repository (if applicable) or download the source code.**
     ```bash
