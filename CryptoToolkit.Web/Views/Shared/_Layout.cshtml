@@ -39,11 +39,11 @@
           <div class="flex flex-1 justify-end gap-8">
             <div class="flex items-center gap-9">
               <a class="text-white text-sm font-medium leading-normal hover:text-gray-300 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Encrypt" ? "text-blue-400" : "")" 
-                 asp-controller="Crypto" asp-action="Encrypt">AES/RSA Şifreleme</a>
+                 asp-controller="Crypto" asp-action="Encrypt">AES Şifreleme</a>
               <a class="text-white text-sm font-medium leading-normal hover:text-gray-300 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Hash" ? "text-blue-400" : "")" 
                  asp-controller="Crypto" asp-action="Hash">SHA256 Özetleme</a>
               <a class="text-white text-sm font-medium leading-normal hover:text-gray-300 @(ViewContext.RouteData.Values["Action"]?.ToString() == "Decrypt" ? "text-blue-400" : "")" 
-                 asp-controller="Crypto" asp-action="Decrypt">Şifre Çözme</a>
+                 asp-controller="Crypto" asp-action="Decrypt">AES Şifre Çözme</a>
             </div>
             <button
               class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-[#243447] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5 hover:bg-[#2a3b52]"
