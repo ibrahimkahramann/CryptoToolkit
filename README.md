@@ -2,6 +2,21 @@
 
 CryptoToolkit is an ASP.NET Core MVC web application that provides a set of tools for common cryptographic operations, including AES encryption/decryption and SHA256 hashing.
 
+## Screenshots
+
+### AES Encryption
+![AES Encryption](screenshots/encrypt-page.png)
+![Encryption Result](screenshots/encrypt-result.png)
+
+### AES Decryption
+![AES Decryption](screenshots/decrypt-page.png)
+![Decryption Result](screenshots/decrypt-result.png)
+
+### SHA256 Hashing
+![SHA256 Hashing - Text Input](screenshots/hash-text.png)
+![SHA256 Hashing - File Input](screenshots/hash-file.png)
+![Hash Result](screenshots/hash-result.png)
+
 ## Features
 
 *   **AES Encryption**: Encrypts plaintext using AES (Advanced Encryption Standard). It generates a ciphertext, a unique key, and an initialization vector (IV).
@@ -47,25 +62,42 @@ To run this project locally, you'll need the .NET 7 SDK installed.
 Once the application is running, you can access the different tools via the navigation bar or by directly visiting their URLs:
 
 *   ### Encrypt (`/Crypto/Encrypt`)
+    
+    ![Encrypt Page](screenshots/encrypt-page.png)
+    
     1.  Navigate to the "Encrypt" page.
     2.  Enter the plaintext you want to encrypt in the text area.
     3.  Click the "Encrypt" button.
     4.  The application will display the generated Ciphertext, AES Key, and AES IV.
     5.  You can copy these values or use the "Go to Decrypt page" button, which will take you to the Decrypt page with these values pre-filled.
+    
+    ![Encryption Result](screenshots/encrypt-result.png)
 
 *   ### Decrypt (`/Crypto/Decrypt`)
+    
+    ![Decrypt Page](screenshots/decrypt-page.png)
+    
     1.  Navigate to the "Decrypt" page.
     2.  If you came from the Encrypt page, the Ciphertext, Key, and IV fields might be pre-filled. Otherwise, enter the Ciphertext, the AES Key, and the AES IV.
     3.  Click the "Decrypt" button.
     4.  The application will display the original plaintext.
+    
+    ![Decryption Result](screenshots/decrypt-result.png)
 
 *   ### Hash (`/Crypto/Hash`)
+    
+    ![Hash Page - Text Input](screenshots/hash-text.png)
+    
     1.  Navigate to the "Hash" page.
     2.  You can either:
         *   Enter text directly into the text area.
         *   Upload a file using the file input.
     3.  Click the "Compute Hash" button.
     4.  The application will display the SHA256 hash of the input text or file.
+    
+    ![Hash Page - File Input](screenshots/hash-file.png)
+    
+    ![Hash Result](screenshots/hash-result.png)
 
 ## Project Structure
 
@@ -94,6 +126,3 @@ The main components of the project are organized as follows:
 
 Contributions are welcome! If you have suggestions for improvements or find any issues, please feel free to open an issue or submit a pull request (if this were a public repository).
 
-## License
-
-This project is currently not under a specific license. Please refer to the `LICENSE` file if one is added in the future.
